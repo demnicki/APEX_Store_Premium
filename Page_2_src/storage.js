@@ -1,5 +1,6 @@
 var all_local_storage;
 var login_mail = 'adam@wp.pl';
+var id_user = '1001';
 var order_nr = '12345678';
 var content_message = 'Your message';
 var add_app_1 = false;

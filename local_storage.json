@@ -1,6 +1,7 @@
 ﻿{
 	"login_mail": "",
 	"order_nr": "",
+	"id_user": "",
 	"content_message": "",
 	"add_app_1": false,
 	"add_app_2": false,
