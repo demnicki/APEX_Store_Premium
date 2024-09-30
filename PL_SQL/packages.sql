@@ -11,7 +11,7 @@ IS
 	PROCEDURE create_customer(
 		in_login_email    IN users.login_email%TYPE,
 		in_gender_user    IN users.gender_user%TYPE,
-		in_language_user  IN users.gender_user%TYPE,
+		in_language_user  IN users.language_user%TYPE,
 		in_nr_tel         IN nrs_tel.nr_tel%TYPE,
 		in_name_user      IN users.name_user%TYPE,
 		out_if_successful OUT BOOLEAN);
@@ -34,7 +34,7 @@ IS
 	PROCEDURE create_customer(
 		in_login_email    IN users.login_email%TYPE,
 		in_gender_user    IN users.gender_user%TYPE,
-		in_language_user  IN users.gender_user%TYPE,
+		in_language_user  IN users.language_user%TYPE,
 		in_nr_tel         IN nrs_tel.nr_tel%TYPE,
 		in_name_user      IN users.name_user%TYPE,
 		out_if_successful OUT BOOLEAN)
@@ -45,7 +45,6 @@ IS
 		v_login_email := lower(in_login_email);
 		SELECT count(login_email) INTO n FROM users WHERE login_email = v_login_email;
 		IF n = 0 THEN
-			SAVEPOINT;
 			INSERT INTO users(login_email, gender_user, permission_type, language_user, name_user) VALUES (v_login_email, lower(in_gender_user), 'c', in_language_user, in_name_user);
 			COMMIT;
 			out_if_successful := true;
