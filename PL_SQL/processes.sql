@@ -27,6 +27,15 @@ BEGIN
 END;
 
 /*
+Processes for page 2.
+*/
+DECLARE
+    t_begin VARCHAR2(200) := '';
+    t_end VARCHAR2(20) := '';
+BEGIN
+htp.p(t_begin||APEX_APPLICATION.G_USER||t_end);
+END;
+/*
 Processes for page 3.
 */
 DECLARE
