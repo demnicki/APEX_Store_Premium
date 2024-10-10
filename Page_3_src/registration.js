@@ -1,5 +1,4 @@
-﻿
-function register() {
+﻿function register() {
     apex.server.process(
         'Register', 
         {
@@ -12,7 +11,7 @@ function register() {
             success: function (Data) {
                 var object = JSON.parse(Data);
                 if (object.if_successful) {
-                    apex.navigation.redirect('./r/kurs_wideo/intro/welcome');
+                    apex.navigation.redirect('./r/premium/intro/welcome');
                 } else {
                     apex.message.alert('Fatal error. Please try again or contact support. Comm: ' + Data);
                 };
