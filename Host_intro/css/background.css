@@ -1,0 +1,50 @@
+
+body, html {
+margin: 0;
+font-family: Arial;
+}
+
+.background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.central_frame {
+    position: fixed;
+    top: 25%;
+    left:25%;
+    right:25%;
+    bottom: 25%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    color: white;
+    border-radius: 25px;
+    padding: 2%;
+    align-items: center;
+    justify-content: center;
+}
+
+.motto {
+    font-size: 20px;
+}
+
+.logo {
+    font-size: 70px;
+}
+
+.circle {
+    display: flex;
+    flex-direction: column;
+    font-size: 50px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: #FFD700;
+    padding: 2%;
+    align-items: center;
+    justify-content: center;
+}

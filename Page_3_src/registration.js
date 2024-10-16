@@ -11,7 +11,7 @@
             success: function (Data) {
                 var object = JSON.parse(Data);
                 if (object.if_successful) {
-                    apex.navigation.redirect('./r/premium/intro/welcome');
+                    apex.navigation.redirect('./r/premium/intro/pay');
                 } else {
                     apex.message.alert('Fatal error. Please try again or contact support. Comm: ' + Data);
                 };
@@ -22,4 +22,4 @@
             error: function () { apex.message.alert('Fatal error. Please try again or contact support.'); }
         }
     );
-}
+};
