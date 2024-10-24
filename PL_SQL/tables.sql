@@ -76,6 +76,7 @@ CREATE TABLE product_type(
 
 CREATE TABLE products(
 	id           NUMBER(2) NOT NULL,
+	name_product VARCHAR(1000 CHAR),
 	product_type CHAR(1 CHAR) NOT NULL,
 	price        NUMBER(6, 2) DEFAULT 0.01 NOT NULL,
 	image        BLOB,
@@ -115,7 +116,7 @@ CREATE TABLE messages(
 	date_created           DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	login_email            VARCHAR(100 CHAR) NOT NULL,
 	id_emp                 CHAR(2 CHAR) NOT NULL,
-	message_status         CHAR(1 CHAR) NOT NULL,
+	message_status         CHAR(1 CHAR) DEFAULT 'n' NOT NULL,
 	content_message        CLOB,
 	content_translation_pl CLOB,
 	CONSTRAINT c_id_message PRIMARY KEY (id_message),
