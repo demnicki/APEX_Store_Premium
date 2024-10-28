@@ -69,7 +69,7 @@ CREATE TABLE employees(
 );
 
 CREATE TABLE product_type(
-	id          CHAR(15 CHAR) NOT NULL,
+	id          CHAR(1 CHAR) NOT NULL,
 	description VARCHAR(2000 CHAR),
 	CONSTRAINT c_id_product_type PRIMARY KEY (id)
 );
