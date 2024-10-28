@@ -11,7 +11,7 @@ function post_login_mail(login_mail) {
         },
         {
             success: function (Data) {
-                apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
+                apex.navigation.redirect('f?p=&APP_ID.:1:&APP_SESSION.');
             },
             dataType: "text"
         },
