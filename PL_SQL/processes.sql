@@ -13,6 +13,14 @@ BEGIN
 END;
 
 /*
+The process of refreshing the value of the entire shopping cart.
+*/
+
+BEGIN
+	:SHOP_CART_STATUS := 'Value of your shopping cart: '||shop.cart_value(apex_custom_auth.get_session_id)||' EUR.';
+END;
+
+/*
 Application processes - Authorization scheme - checking if the user is registered.
 */
 BEGIN
