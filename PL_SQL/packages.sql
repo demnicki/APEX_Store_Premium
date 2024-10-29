@@ -61,3 +61,34 @@ IS
 			out_if_successful := false;
 	END create_customer;
 END authentication;
+
+CREATE OR REPLACE PACKAGE shop
+IS
+	PROCEDURE create_order(
+		in_login_email    IN users.login_email%TYPE,
+		in_id_emp         IN employees.id_emp%TYPE,
+		in_nr_session     IN order_records.session_number%TYPE,
+		out_id_order      OUT order_records.id_order%TYPE,
+		out_if_successful OUT BOOLEAN);
+
+END shop;
+
+CREATE OR REPLACE PACKAGE BODY shop
+IS
+	PROCEDURE create_order(
+		in_login_email    IN users.login_email%TYPE,
+		in_id_emp         IN employees.id_emp%TYPE,
+		in_nr_session     IN order_records.session_number%TYPE,
+		out_id_order      OUT order_records.id_order%TYPE,
+		out_if_successful OUT BOOLEAN)
+	IS
+		
+	BEGIN
+		out_id_order := seq_orders.NEXTVAL;
+		INSERT INTO order_records()
+	EXCEPTION
+		WHEN others THEN
+			ROLLBACK;
+			out_if_successful := false;
+	END create_order;
+END shop;nr

@@ -41,3 +41,8 @@ BEGIN
 	apex_json.write('if_successful', if_successful);
 	apex_json.close_object;
 END;
+
+/*
+SQL queries for managing the shopping cart.
+*/
+

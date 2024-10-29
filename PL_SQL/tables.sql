@@ -97,7 +97,7 @@ CREATE TABLE order_records(
 	CONSTRAINT c_id_emp_order FOREIGN KEY (id_emp) REFERENCES employees(id_emp)
 );
 
-CREATE TABLE shopping_cart(
+CREATE TABLE order_details(
 	id_order   NUMBER(8) NOT NULL,
 	id_product NUMBER(2) NOT NULL,
 	quantity   NUMBER(3) DEFAULT 1 NOT NULL,
@@ -123,4 +123,11 @@ CREATE TABLE messages(
 	CONSTRAINT c_login_mess FOREIGN KEY (login_email) REFERENCES users(login_email),
 	CONSTRAINT c_id_emp_mess FOREIGN KEY (id_emp) REFERENCES employees(id_emp),
 	CONSTRAINT c_type_mess FOREIGN KEY (message_status) REFERENCES message_status(id)
+);
+
+CREATE TABLE shopping_cart(
+	session_number CHAR(15 CHAR) NOT NULL,
+	id_product NUMBER(2) NOT NULL,
+	quantity   NUMBER(3) DEFAULT 1 NOT NULL,
+	CONSTRAINT c_id_product_shop FOREIGN KEY (id_product) REFERENCES products(id)
 );
