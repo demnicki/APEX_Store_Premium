@@ -43,7 +43,7 @@ CREATE TABLE users(
 	permission_type       CHAR(1 CHAR) NOT NULL,
 	language_user         CHAR(2 CHAR) NOT NULL,
 	name_user             VARCHAR(300 CHAR),
-	balance_available_eur NUMBER(6, 2) DEFAULT 4.99 NOT NULL,
+	balance_available_eur NUMBER(6, 2) DEFAULT 1.50 NOT NULL,
 	date_created          DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_login_email PRIMARY KEY (login_email),
 	CONSTRAINT c_id_user UNIQUE (id_user),

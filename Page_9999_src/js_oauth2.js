@@ -11,7 +11,17 @@ function post_login_mail(login_mail) {
         },
         {
             success: function (Data) {
-                apex.navigation.redirect('f?p=&APP_ID.:1:&APP_SESSION.');
+                var obj_json = JSON.parse(Data);
+                if (obj_json.v_is_register) {
+                    if (obj_json.v_have_pay_subsc) {
+                        apex.navigation.redirect('f?p=&APP_ID.:2:&APP_SESSION.');
+                    } else {
+                        apex.navigation.redirect('f?p=&APP_ID.:12:&APP_SESSION.');
+                    };
+                }
+                else {
+                    apex.navigation.redirect('f?p=&APP_ID.:3:&APP_SESSION.');
+                };
             },
             dataType: "text"
         },

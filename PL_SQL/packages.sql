@@ -8,6 +8,8 @@ CREATE OR REPLACE PACKAGE authentication
 IS
 	FUNCTION is_exist_user(a_login_email VARCHAR2) RETURN BOOLEAN;
 
+	FUNCTION have_pay_subsc(a_login_email VARCHAR2) RETURN BOOLEAN;
+
 	PROCEDURE create_customer(
 		in_login_email    IN users.login_email%TYPE,
 		in_gender_user    IN users.gender_user%TYPE,
@@ -30,6 +32,17 @@ IS
 			RETURN false;
 		END IF;
 	END is_exist_user;
+
+	FUNCTION have_pay_subsc(a_login_email VARCHAR2) RETURN BOOLEAN IS
+		v_balance_available_eur users.balance_available_eur%TYPE := 0;
+	BEGIN
+		SELECT balance_available_eur INTO v_balance_available_eur FROM users WHERE login_email = a_login_email;
+		IF v_balance_available_eur > 4.99 THEN
+			RETURN true;
+		ELSE
+			RETURN false;
+		END IF;
+	END have_pay_subsc;
 
 	PROCEDURE create_customer(
 		in_login_email    IN users.login_email%TYPE,
@@ -72,9 +85,15 @@ CREATE OR REPLACE PACKAGE BODY shop
 IS
 	FUNCTION cart_value(a_session_nr shopping_cart.session_number%TYPE) RETURN VARCHAR2
 	IS
-		v_result NUMBER(6, 2) := 0.00;
+		n        NUMBER(3);
+		v_result NUMBER(6, 2);
 	BEGIN
-		SELECT sum(quantity * (SELECT price FROM products WHERE id = id_product)) INTO v_result FROM shopping_cart WHERE session_number = a_session_nr;
-		RETURN to_char(v_result, '999.99');
+		SELECT count(session_number) INTO n FROM shopping_cart WHERE session_number = a_session_nr;
+		IF n = 0 THEN
+			RETURN '0.00';
+		ELSE
+			SELECT sum(quantity * (SELECT price FROM products WHERE id = id_product)) INTO v_result FROM shopping_cart WHERE session_number = a_session_nr;
+			RETURN to_char(v_result, '999.99');
+		END IF;		
 	END cart_value;
 END shop;
