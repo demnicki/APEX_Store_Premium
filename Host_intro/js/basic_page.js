@@ -1,6 +1,17 @@
-﻿var v_login_mail = '';
+﻿var v_login_mail = '@';
 
-var all_local_storage;
+function go_to_panel(nr_if_login, eur) {
+    var v_nr_if_login = parseInt(nr_if_login);
+    var v_eur = parseFloat(eur);
+    if (v_nr_if_login = 1 && v_eur > 5) {
+        apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
+    }
+    else if (v_nr_if_login = 1 && v_eur < 5) {
+        apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":12:" + apex.env.APP_SESSION);
+    } else {
+        apex.message.alert('You are not logged in.');
+    };
+};
 
 function social_med(nr) {
     if (nr == 1) {

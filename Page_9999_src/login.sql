@@ -14,19 +14,20 @@ BEGIN
 		SELECT id_user,
 			name_user,
 			balance_available_eur
-			INTO
+		INTO
 			v_id_user,
 			v_name_user,
 			v_eur
 		FROM users WHERE login_email = lower(apex_application.g_x01);
+		:NR_IF_LOGIN := 1;
+		:NR_ANIM := 1;
+		:NR_INBOX := 1;
 		:EUR := v_eur;
 		:ID_USER := v_id_user;
 		:NAME_USER := v_name_user;
 		IF authentication.have_pay_subsc(lower(apex_application.g_x01)) THEN
 			v_have_pay_subsc := true;
 		END IF;
-	ELSE
-		:EUR := 0.00;
 	END IF;
 	apex_json.open_object;
 	apex_json.write('v_is_register', v_is_register);
