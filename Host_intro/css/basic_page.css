@@ -1,0 +1,73 @@
+﻿body {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#background_movie {
+    display: none;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.logo_shop {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 25px;
+    padding: 2%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 70px;
+}
+.right {
+    background: rgba(225,225,225, 0.7);
+    color: black;
+    border-radius: 25px;
+    border: 2px solid goldenrod;
+    padding: 20px;
+}
+
+.text_center {
+    text-align: center;
+}
+
+.text_left {
+    text-align: left;
+    text-indent: 50px;
+}
+
+.button_plus {
+    background-color: green;
+    display: flex;
+    flex-direction: row;
+    font-size: 50px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding-bottom: 5%;
+    align-items: center;
+    justify-content: center;
+}
+
+.button_minus {
+    background-color: red;
+    display: flex;
+    flex-direction: row;
+    font-size: 50px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding-bottom: 5%;
+    align-items: center;
+    justify-content: center;
+}
+.t-Footer {
+    margin-left: 40%;
+    margin-right: 40%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #FFD700;
+}

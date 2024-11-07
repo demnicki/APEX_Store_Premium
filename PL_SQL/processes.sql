@@ -24,3 +24,10 @@ BEGIN
 
 	END IF;
 END;
+
+/*
+
+*/
+BEGIN
+    :NR_ANIM := apex_application.g_x01;
+END;
