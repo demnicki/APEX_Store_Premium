@@ -90,6 +90,11 @@ function social_med(nr) {
     };
 
 };
+
+function open_message(string_url) {
+    apex.navigation.dialog.close(true);
+    apex.navigation.redirect(string_url);
+};
 function message_box() {
     apex.message.alert('This service is not ready yet.');
 };

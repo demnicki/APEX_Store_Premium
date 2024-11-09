@@ -35,7 +35,7 @@ var text_motto = '&#8222;They do not exist the limits of possibility, and the pa
 
 function logo() {
     if (sec < 1) {
-        location.href = './r/premium/intro/inst_en';
+        window.location.href = './r/premium/intro/inst_en';
     }
     else {
         sec = sec - 1;
@@ -51,5 +51,3 @@ function logo() {
         document.getElementById('second_hand').innerHTML = sec;
     };
 };
-
-setInterval(logo, 1000);

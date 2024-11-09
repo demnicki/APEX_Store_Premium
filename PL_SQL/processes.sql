@@ -31,3 +31,15 @@ END;
 BEGIN
     :NR_ANIM := apex_application.g_x01;
 END;
+
+/*
+
+*/
+DECLARE
+	string_url VARCHAR2(3000 CHAR);
+BEGIN
+	string_url := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':'||apex_application.g_x01||':'||:APP_SESSION||'::NO::');
+	apex_json.open_object;
+	apex_json.write('string_url', string_url);
+	apex_json.close_object;
+END;
