@@ -91,18 +91,23 @@ function social_med(nr) {
 
 };
 
-function open_message(string_url) {
-    apex.navigation.dialog.close(true);
-    apex.navigation.redirect(string_url);
+function send_message() {
+    apex.server.process(
+        'Send_mess',
+        {
+            X01: 'To: '+apex.item('P15_LIST').getValue()+'. ',
+            X02: apex.item('P15_MESSAG').getValue(),
+            X03: apex.item('P15_FILE').getValue(),
+        },
+        {
+            success: function (Data) {},
+            dataType: "text"
+        },
+        {
+            error: function () {}
+        }
+    );
 };
-function message_box() {
-    apex.message.alert('This service is not ready yet.');
-};
-
-function shopping_cart() {
-    apex.message.alert('This service is not ready yet.');
-};
-
 function login() {
     apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":9999:" + apex.env.APP_SESSION);
 };
