@@ -111,3 +111,8 @@ function send_message() {
 function login() {
     apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":9999:" + apex.env.APP_SESSION);
 };
+
+async function get_page(p_url) {
+    var response = await fetch(p_url);
+    document.getElementById('load_page').innerHTML = response.text();
+};
