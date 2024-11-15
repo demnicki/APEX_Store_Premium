@@ -1,4 +1,4 @@
-﻿body {
+body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -40,14 +40,24 @@
     text-indent: 50px;
 }
 
+.text_right {
+    text-align: right;
+}
+
+.card_shop {
+    background: rgba(225,225,225, 0.7);
+    border: 2px solid goldenrod;
+    border-radius: 25px;
+}
+
 .button_plus {
     background-color: green;
     display: flex;
     flex-direction: row;
-    font-size: 50px;
+    font-size: 30px;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     padding-bottom: 5%;
     align-items: center;
     justify-content: center;
@@ -57,10 +67,10 @@
     background-color: red;
     display: flex;
     flex-direction: row;
-    font-size: 50px;
+    font-size: 30px;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     padding-bottom: 5%;
     align-items: center;
     justify-content: center;
