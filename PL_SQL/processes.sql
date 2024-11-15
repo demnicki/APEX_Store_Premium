@@ -100,27 +100,75 @@ BEGIN
 	apex_json.close_object;
 END;
 /*
-Sequence five. Reducing the quantity of a specific product in the shopping cart.
+Sequence five. Adding another product to the shopping cart.
+*/
+DECLARE
+	n NUMBER(3);
+BEGIN
+	SELECT count(*) INTO n FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+	IF n = 0 THEN
+		INSERT INTO shopping_cart(session_number, id_product) VALUES (apex_custom_auth.get_session_id, apex_application.g_x01);
+	ELSIF n = 1 THEN
+		UPDATE shopping_cart SET quantity = (quantity + 1) WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+	END IF;
+END;
+/*
+Sequence six. Reducing the quantity of a specific product in the shopping cart.
+*/
+DECLARE
+    v_quantity shopping_cart.quantity%TYPE;
+BEGIN
+	SELECT quantity INTO v_quantity FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+    IF v_quantity = 1 THEN
+        DELETE FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+    ELSIF v_quantity > 1 THEN
+        UPDATE shopping_cart SET quantity = (v_quantity - 1) WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+    ELSE
+        DELETE FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id;
+    END IF;
+    COMMIT;
+    apex_json.open_object;
+	apex_json.write('v_quantity', v_quantity);
+	apex_json.close_object;
+END;
+/*
+Sequence seven. Increasing the quantity of a specific product in the shopping cart.
+*/
+DECLARE
+    v_quantity shopping_cart.quantity%TYPE;
+BEGIN
+	SELECT quantity INTO v_quantity FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+    v_quantity := v_quantity + 1;
+    UPDATE shopping_cart SET quantity = v_quantity WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+    COMMIT;
+    apex_json.open_object;
+	apex_json.write('v_quantity', v_quantity);
+	apex_json.close_object;
+END;
+/*
+Sequence eight. Placing an order.
 */
 BEGIN
 	NULL;
 END;
 /*
-Sequence six. Increasing the quantity of a specific product in the shopping cart.
-*/
-BEGIN
-	NULL;
-END;
-/*
-Sequence seven. Placing an order.
-*/
-BEGIN
-	NULL;
-END;
-/*
-Sequence eight. Sending a message to our sales representative.
+Sequence nine. Sending a message to our sales representative.
 */
 BEGIN
     :CONTENT_MESS := apex_application.g_x01||apex_application.g_x02;
 	:FILE_MESS := apex_application.g_x03;
+END;
+/*
+Sequence ten. Top-up of the user's account with the amount of one and a half euros.
+*/
+DECLARE
+    v_eur users.balance_available_eur%TYPE;
+BEGIN
+    SELECT balance_available_eur INTO v_eur FROM users WHERE id_user = apex_application.g_x01;
+    v_eur := v_eur + 1.50;
+    UPDATE users SET balance_available_eur = v_eur WHERE id_user = apex_application.g_x01;
+    COMMIT;
+    apex_json.open_object;
+	apex_json.write('if_successful', true);
+	apex_json.close_object;
 END;
