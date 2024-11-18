@@ -5,20 +5,21 @@ Sequence one. Every time the page loads.
 */
 DECLARE
 	n NUMBER(1);
-	v_anim_type       user_sessions.anim_type%TYPE;
-	v_unread_messages user_sessionsunread_messages.%TYPE;
+	v_anim_type       api_sessions.anim_type%TYPE;
+	v_unread_messages api_sessions.unread_messages%TYPE;
 BEGIN
-	SELECT count(session_number) INTO n FROM user_sessions WHERE session_number = apex_custom_auth.get_session_id;
+	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
 	:TEXT_SHOP_CART := 'Value of your shopping cart: '||shop.cart_value(apex_custom_auth.get_session_id)||' EUR.';
 	IF n = 0 THEN
 		INSERT INTO api_sessions(session_number, ip, agent) VALUES (apex_custom_auth.get_session_id, owa_util.get_cgi_env('REMOTE_ADDR'), owa_util.get_cgi_env('HTTP_USER_AGENT'));
+		COMMIT;
     	:NR_IF_LOGIN := 0;
 		:NR_ANIM := 1;
 		:NR_INBOX := 1;
 		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
 	ELSIF n = 1 THEN
-		SELECT anim_type, unread_messages INTO v_anim_type, v_unread_messages FROM user_sessions WHERE session_number = apex_custom_auth.get_session_id;
+		SELECT anim_type, unread_messages INTO v_anim_type, v_unread_messages FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
 		:NR_ANIM := v_anim_type;
 		:NR_INBOX := v_unread_messages;
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
@@ -49,8 +50,17 @@ DECLARE
 	v_id_user         users.id_user%TYPE;
 	v_name_user       users.name_user%TYPE;
 BEGIN
-	:LOGIN_EMAIL := apex_application.g_x01;
-	IF authentication.is_exist_user(lower(apex_application.g_x01)) THEN
+	:LOGIN_EMAIL := lower(apex_application.g_x01);
+	v_is_register := authentication.is_exist_user(:LOGIN_EMAIL);
+	IF v_is_register THEN
+		SELECT id_user, name_user INTO v_id_user, v_name_user FROM users WHERE login_email = :LOGIN_EMAIL;
+		:EUR := shop.available_eur(v_id_user);
+	ELSE
+
+
+	END IF;
+	v_have_pay_subsc
+	IF authentication.is_exist_user(:LOGIN_EMAIL) THEN
 		v_is_register := true;	
 		SELECT id_user,
 			name_user,
@@ -77,33 +87,38 @@ END;
 Sequence four. New user registration.
 */
 DECLARE
-	if_successful     BOOLEAN;
-	v_id_user         users.id_user%TYPE;
-	v_eur             users.balance_available_eur%TYPE;
-
+	if_successful BOOLEAN;
+	n             NUMBER(1);
+	v_id_user     users.id_user%TYPE;
 BEGIN
-	authentication.create_customer(
-		in_login_email    => :LOGIN_EMAIL,
-		in_gender_user    => apex_application.g_x01,
-		in_language_user  => apex_application.g_x02,
-		in_nr_tel         => apex_application.g_x03,
-		in_name_user      => apex_application.g_x04,
-		out_if_successful => if_successful);
-	IF if_successful THEN
-		SELECT id_user,
-			balance_available_eur
-		INTO
-			v_id_user,
-			v_eur
-		FROM users WHERE login_email = lower(:LOGIN_EMAIL);
-		:NR_IF_LOGIN := 1;
-		:EUR := v_eur;
-		:ID_USER := v_id_user;
-		:NAME_USER := apex_application.g_x04;
+	if_successful := false;
+	SELECT count(login_email) INTO n FROM users WHERE login_email = :LOGIN_EMAIL;
+	IF n = 0 THEN
+		v_id_user := seq_users.NEXTVAL;
+		INSERT INTO users(login_email, id_user, gender_user, language_user, name_user) VALUES (:LOGIN_EMAIL, v_id_user, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x04);
+		COMMIT;
+		INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (v_id_user, 1, 1.50, 'A new account has been created with login '||:LOGIN_EMAIL||'.');
+		COMMIT;
+		if_successful := true;
+		IF length(apex_application.g_x03) > 5 THEN
+			INSERT INTO nrs_tel(nr_tel, id_user) VALUES (apex_application.g_x03, v_id_user);
+			COMMIT;
+		END IF;
+
 	END IF;
+	:NR_IF_LOGIN := 1;
+	:EUR := 1.50;
+	:ID_USER := v_id_user;
+	:NAME_USER := apex_application.g_x04;
 	apex_json.open_object;
 	apex_json.write('if_successful', if_successful);
 	apex_json.close_object;
+EXCEPTION
+	WHEN others THEN
+		ROLLBACK;
+		apex_json.open_object;
+		apex_json.write('if_successful', false);
+		apex_json.close_object;
 END;
 /*
 Sequence five. Adding another product to the shopping cart.
