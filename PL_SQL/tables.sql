@@ -75,7 +75,7 @@ CREATE TABLE transaction_type(
 	CONSTRAINT c_direction CHECK ((direction) in ('i','o'))
 );
 CREATE TABLE account_operations(
-	id_trans       NUMBER(4) DEFAULT ON NULL seq_operat.NEXTVAL NOT NULL,
+	id_trans       NUMBER(9) DEFAULT ON NULL seq_operat.NEXTVAL NOT NULL,
 	id_user        NUMBER(4) NOT NULL,
 	id_type        NUMBER(1) NOT NULL,
 	amount         NUMBER(8,2) NOT NULL,

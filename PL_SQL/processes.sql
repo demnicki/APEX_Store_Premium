@@ -54,29 +54,10 @@ BEGIN
 	v_is_register := authentication.is_exist_user(:LOGIN_EMAIL);
 	IF v_is_register THEN
 		SELECT id_user, name_user INTO v_id_user, v_name_user FROM users WHERE login_email = :LOGIN_EMAIL;
-		:EUR := shop.available_eur(v_id_user);
-	ELSE
-
-
-	END IF;
-	v_have_pay_subsc
-	IF authentication.is_exist_user(:LOGIN_EMAIL) THEN
-		v_is_register := true;	
-		SELECT id_user,
-			name_user,
-		INTO
-			v_id_user,
-			v_name_user,
-		FROM users WHERE login_email = lower(apex_application.g_x01);
-		:NR_IF_LOGIN := 1;
-		:NR_ANIM := 1;
-		:NR_INBOX := 1;
-		:EUR := 0.00;
+		v_have_pay_subsc := authentication.have_pay_subsc(v_id_user);
 		:ID_USER := v_id_user;
 		:NAME_USER := v_name_user;
-		IF authentication.have_pay_subsc(lower(apex_application.g_x01)) THEN
-			v_have_pay_subsc := true;
-		END IF;
+		:EUR := shop.available_eur(v_id_user);
 	END IF;
 	apex_json.open_object;
 	apex_json.write('v_is_register', v_is_register);
@@ -94,9 +75,9 @@ BEGIN
 	if_successful := false;
 	SELECT count(login_email) INTO n FROM users WHERE login_email = :LOGIN_EMAIL;
 	IF n = 0 THEN
-		v_id_user := seq_users.NEXTVAL;
-		INSERT INTO users(login_email, id_user, gender_user, language_user, name_user) VALUES (:LOGIN_EMAIL, v_id_user, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x04);
+		INSERT INTO users(login_email, gender_user, language_user, name_user) VALUES (:LOGIN_EMAIL, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x04);
 		COMMIT;
+		SELECT id_user INTO v_id_user FROM users WHERE login_email = :LOGIN_EMAIL;
 		INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (v_id_user, 1, 1.50, 'A new account has been created with login '||:LOGIN_EMAIL||'.');
 		COMMIT;
 		if_successful := true;
@@ -182,14 +163,16 @@ END;
 /*
 Sequence ten. Top-up of the user's account with the amount of one and a half euros.
 */
-DECLARE
-    v_eur users.balance_available_eur%TYPE;
 BEGIN
-    SELECT balance_available_eur INTO v_eur FROM users WHERE id_user = apex_application.g_x01;
-    v_eur := v_eur + 1.50;
-    UPDATE users SET balance_available_eur = v_eur WHERE id_user = apex_application.g_x01;
+    INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (apex_application.g_x01, 2, 1.50, 'The guest with IP address '||owa_util.get_cgi_env('REMOTE_ADDR')||' has credited your account with the amount of one and a half euros.');
     COMMIT;
     apex_json.open_object;
 	apex_json.write('if_successful', true);
 	apex_json.close_object;
+EXCEPTION
+	WHEN others THEN
+		ROLLBACK;
+		apex_json.open_object;
+		apex_json.write('if_successful', false);
+		apex_json.close_object;
 END;
