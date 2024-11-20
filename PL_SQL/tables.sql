@@ -30,12 +30,14 @@ CREATE TABLE languages(
 );
 
 CREATE TABLE users(
-	login_email   VARCHAR(100 CHAR) NOT NULL,
-	id_user       NUMBER(4) DEFAULT ON NULL seq_users.NEXTVAL NOT NULL,
-	gender_user   CHAR(1 CHAR) NOT NULL,
-	language_user CHAR(2 CHAR) NOT NULL,
-	name_user     VARCHAR(300 CHAR),
-	date_created  DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	login_email     VARCHAR(100 CHAR) NOT NULL,
+	id_user         NUMBER(4) DEFAULT ON NULL seq_users.NEXTVAL NOT NULL,
+	gender_user     CHAR(1 CHAR) NOT NULL,
+	language_user   CHAR(2 CHAR) NOT NULL,
+	anim_type       NUMBER(1) DEFAULT 1 NOT NULL,
+	unread_messages NUMBER(1) DEFAULT 1 NOT NULL,
+	name_user       VARCHAR(300 CHAR),
+	date_created    DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_login_email PRIMARY KEY (login_email),
 	CONSTRAINT c_id_user UNIQUE (id_user),
 	CONSTRAINT c_gender_user CHECK ((gender_user) in ('m','f', 'n')),
@@ -51,8 +53,6 @@ CREATE TABLE nrs_tel(
 
 CREATE TABLE api_sessions(
 	session_number  CHAR(16 CHAR) NOT NULL,
-	anim_type       NUMBER(1) DEFAULT 1 NOT NULL,
-	unread_messages NUMBER(1) DEFAULT 1 NOT NULL,
 	ip              CHAR(15 CHAR),
 	agent           VARCHAR(250 CHAR),
 	start_session   DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -70,10 +70,10 @@ CREATE TABLE transaction_type(
 	id_type     NUMBER(1) NOT NULL,
 	direction   CHAR(1 CHAR) NOT NULL,
 	type_name   VARCHAR(30 CHAR),
-	description VARCHAR(1000 CHAR), 
 	CONSTRAINT c_id_type PRIMARY KEY (id_type),
 	CONSTRAINT c_direction CHECK ((direction) in ('i','o'))
 );
+
 CREATE TABLE account_operations(
 	id_trans       NUMBER(9) DEFAULT ON NULL seq_operat.NEXTVAL NOT NULL,
 	id_user        NUMBER(4) NOT NULL,
