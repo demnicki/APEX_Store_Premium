@@ -35,7 +35,7 @@ CREATE TABLE users(
 	gender_user     CHAR(1 CHAR) NOT NULL,
 	language_user   CHAR(2 CHAR) NOT NULL,
 	anim_type       NUMBER(1) DEFAULT 1 NOT NULL,
-	unread_messages NUMBER(1) DEFAULT 1 NOT NULL,
+	unread_messages NUMBER(1) DEFAULT 0 NOT NULL,
 	name_user       VARCHAR(300 CHAR),
 	date_created    DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_login_email PRIMARY KEY (login_email),
