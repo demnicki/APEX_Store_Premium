@@ -157,8 +157,18 @@ END;
 Sequence nine. Sending a message to our sales representative.
 */
 BEGIN
-    :CONTENT_MESS := apex_application.g_x01||apex_application.g_x02;
-	:FILE_MESS := apex_application.g_x03;
+	INSERT INTO messages(id_user, id_emp, message_status, content_message, content_translation_pl)
+		VALUES (:ID_USER, apex_application.g_x01, '4', apex_application.g_x02||' File: '||apex_application.g_x03, 'This message is not translated yet.');
+    COMMIT;
+    apex_json.open_object;
+	apex_json.write('if_successful', true);
+	apex_json.close_object;
+EXCEPTION
+	WHEN others THEN
+		ROLLBACK;
+		apex_json.open_object;
+		apex_json.write('if_successful', false);
+		apex_json.close_object;
 END;
 /*
 Sequence ten. Top-up of the user's account with the amount of one and a half euros.

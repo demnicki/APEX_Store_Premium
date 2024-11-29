@@ -3,7 +3,6 @@ Creating packages of PL/SQL procedures and functions for the entire project.
 
 Creating packages of procedures and functions named "Authentication".
 */
-
 CREATE OR REPLACE PACKAGE authentication
 IS
 	FUNCTION is_exist_user(a_login_email users.login_email%TYPE) RETURN BOOLEAN;
@@ -35,9 +34,12 @@ IS
 		END IF;
 	END have_pay_subsc;
 END authentication;
-
+/*
+Creating packages of procedures and functions named "Shop".
+*/
 CREATE OR REPLACE PACKAGE shop
 IS
+	FUNCTION not_empty(a_session_nr api_sessions.session_number%TYPE) RETURN BOOLEAN;
 	FUNCTION cart_value(a_session_nr api_sessions.session_number%TYPE) RETURN VARCHAR2;
 	FUNCTION monthly_subs(a_session_nr api_sessions.session_number%TYPE) RETURN VARCHAR2;
 	FUNCTION available_eur(a_id_user users.id_user%TYPE) RETURN VARCHAR2;
@@ -45,6 +47,18 @@ END shop;
 
 CREATE OR REPLACE PACKAGE BODY shop
 IS
+	FUNCTION not_empty(a_session_nr api_sessions.session_number%TYPE) RETURN BOOLEAN
+	IS
+		n NUMBER(3);
+	BEGIN
+		SELECT count(session_number) INTO n FROM shopping_cart WHERE session_number = a_session_nr;
+		IF n = 0 THEN
+			RETURN false;
+		ELSE
+			RETURN true;
+		END IF;
+	END not_empty;
+
 	FUNCTION cart_value(a_session_nr api_sessions.session_number%TYPE) RETURN VARCHAR2
 	IS
 		n        NUMBER(3);
@@ -52,10 +66,10 @@ IS
 	BEGIN
 		SELECT count(session_number) INTO n FROM shopping_cart WHERE session_number = a_session_nr;
 		IF n = 0 THEN
-			RETURN '0.00';
+			RETURN '€ 0.00';
 		ELSE
 			SELECT sum(quantity * (SELECT price FROM products WHERE id = id_product)) INTO v_result FROM shopping_cart WHERE session_number = a_session_nr;
-			RETURN to_char(v_result, '999.99');
+			RETURN '€ '||to_char(v_result, '999.99');
 		END IF;		
 	END cart_value;
 
@@ -67,11 +81,11 @@ IS
 		SELECT count(session_number) INTO n FROM shopping_cart WHERE session_number = a_session_nr AND
 			id_product = (SELECT id FROM products WHERE product_type = 'c');
 		IF n = 0 THEN
-			RETURN 'No monthly subscription.';
+			RETURN 'No monthly subs.';
 		ELSE
 			SELECT sum(quantity * (SELECT price FROM products WHERE id = id_product)) INTO v_result FROM shopping_cart WHERE session_number = a_session_nr AND
 				id_product = (SELECT id FROM products WHERE product_type = 'c');
-			RETURN 'Monthly subscription fee is: € '||to_char(v_result, '999.99')||'.';
+			RETURN '€ '||to_char(v_result, '999.99');
 		END IF;
 	END monthly_subs;
 
@@ -80,15 +94,16 @@ IS
 		v_eur NUMBER(8,2) := 0;
 	BEGIN
 		SELECT sum(amount) INTO v_eur FROM account_operations WHERE id_user = a_id_user;
-		RETURN to_char(v_eur, '999.99');
+		RETURN '€ '||to_char(v_eur, '999.99');
 	END available_eur;
 END shop;
-
+/*
+Creating packages of procedures and functions named "Mirror".
+*/
 CREATE OR REPLACE PACKAGE mirror
 IS
 	FUNCTION op_sys(a_agent VARCHAR2) RETURN VARCHAR2;
 	FUNCTION browser(a_agent VARCHAR2) RETURN VARCHAR2;
-	FUNCTION language(a_agent VARCHAR2) RETURN VARCHAR2;
 END mirror;
 
 CREATE OR REPLACE PACKAGE BODY mirror
@@ -125,10 +140,9 @@ IS
 		TYPE value_table IS TABLE OF VARCHAR2(100 CHAR) INDEX BY VARCHAR2(100 CHAR);
 		v_browsers_table value_table;
 		v_index          VARCHAR2(100 CHAR);
-		v_result         VARCHAR2(100 CHAR) := 'Browser unknown';
+		v_result         VARCHAR2(100 CHAR) := 'Safari';
 	BEGIN
 		v_browsers_table('postmanruntime') := 'PostMan';
-	    v_browsers_table('safari')         := 'Safari';
 	    v_browsers_table('firefox')        := 'Firefox';
 	    v_browsers_table('chrome')         := 'Chrome';
 	    v_browsers_table('edge')           := 'Edge';
