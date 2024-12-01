@@ -107,7 +107,8 @@ CREATE TABLE products(
 	product_type CHAR(1 CHAR) NOT NULL,
 	price        NUMBER(6, 2) DEFAULT 0.01 NOT NULL,
 	image        BLOB,
-	description  CLOB,
+	desc_en      CLOB,
+	desc_ar      CLOB,
 	CONSTRAINT c_id_product PRIMARY KEY (id),
 	CONSTRAINT c_type_product_1 FOREIGN KEY (product_type) REFERENCES product_type(id)
 );
