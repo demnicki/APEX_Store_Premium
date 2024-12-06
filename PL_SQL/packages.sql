@@ -6,7 +6,6 @@ Creating packages of procedures and functions named "Authentication".
 CREATE OR REPLACE PACKAGE authentication
 IS
 	FUNCTION is_exist_user(a_login_email users.login_email%TYPE) RETURN BOOLEAN;
-	FUNCTION have_pay_subsc(a_id_user users.id_user%TYPE) RETURN BOOLEAN;
 END authentication;
 
 CREATE OR REPLACE PACKAGE BODY authentication
@@ -21,18 +20,6 @@ IS
 			RETURN false;
 		END IF;
 	END is_exist_user;
-
-	FUNCTION have_pay_subsc(a_id_user users.id_user%TYPE) RETURN BOOLEAN
-	IS
-		v_eur NUMBER(8,2) := 0;
-	BEGIN
-		SELECT sum(amount) INTO v_eur FROM account_operations WHERE id_user = a_id_user;
-		IF v_eur > 4.99 THEN
-			RETURN true;
-		ELSE
-			RETURN false;
-		END IF;
-	END have_pay_subsc;
 END authentication;
 /*
 Creating packages of procedures and functions named "Shop".
