@@ -5,8 +5,6 @@ Sequence one. Every time the page loads.
 */
 DECLARE
 	n NUMBER(1);
-	v_anim_type       api_sessions.anim_type%TYPE;
-	v_unread_messages api_sessions.unread_messages%TYPE;
 BEGIN
 	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
 	:TEXT_SHOP_CART := 'Value of your shopping cart: '||shop.cart_value(apex_custom_auth.get_session_id)||' EUR.';
@@ -18,11 +16,10 @@ BEGIN
 		:NR_INBOX := 1;
 		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
+        :LINK_PG_9 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':9:'||:APP_SESSION||'::NO::');
+        :LINK_PG_16 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':16:'||:APP_SESSION||'::NO::');
+        :LINK_PG_18 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':18:'||:APP_SESSION||'::NO::');
 	ELSIF n = 1 THEN
-		SELECT anim_type, unread_messages INTO v_anim_type, v_unread_messages FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
-		:NR_ANIM := v_anim_type;
-		:NR_INBOX := v_unread_messages;
-    	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
 		IF :NR_IF_LOGIN = 1 THEN
     		:TEXT_IF_LOGIN := 'Logged in as: '||lower(:LOGIN_EMAIL)||'.';
     	ELSIF :NR_IF_LOGIN = 0 THEN
@@ -40,28 +37,32 @@ Sequence two. Setting the animation mode.
 */
 BEGIN
     :NR_ANIM := apex_application.g_x01;
+    UPDATE users SET anim_type = apex_application.g_x01 WHERE id_user = :ID_USER;
+    COMMIT;
 END;
 /*
 Sequence three. User login.
 */
 DECLARE
 	v_is_register     BOOLEAN := false;
-	v_have_pay_subsc  BOOLEAN := false;
 	v_id_user         users.id_user%TYPE;
+    v_anim_type       users.anim_type%TYPE;
+    v_unread_messages users.unread_messages%TYPE;
 	v_name_user       users.name_user%TYPE;
 BEGIN
 	:LOGIN_EMAIL := lower(apex_application.g_x01);
 	v_is_register := authentication.is_exist_user(:LOGIN_EMAIL);
 	IF v_is_register THEN
-		SELECT id_user, name_user INTO v_id_user, v_name_user FROM users WHERE login_email = :LOGIN_EMAIL;
-		v_have_pay_subsc := authentication.have_pay_subsc(v_id_user);
+		SELECT id_user, anim_type, unread_messages, name_user INTO v_id_user, v_anim_type, v_unread_messages, v_name_user FROM users WHERE login_email = :LOGIN_EMAIL;
+        :NR_IF_LOGIN := 1;
+        :NR_ANIM := v_anim_type;
+		:NR_INBOX := v_unread_messages;
 		:ID_USER := v_id_user;
 		:NAME_USER := v_name_user;
 		:EUR := shop.available_eur(v_id_user);
 	END IF;
 	apex_json.open_object;
 	apex_json.write('v_is_register', v_is_register);
-	apex_json.write('v_have_pay_subsc', v_have_pay_subsc);
 	apex_json.close_object;
 END;
 /*
@@ -148,20 +149,53 @@ BEGIN
 	apex_json.close_object;
 END;
 /*
-Sequence eight. Placing an order.
+Sequence eight. Completely removing the product from the shopping cart.
 */
 BEGIN
-	NULL;
+	DELETE FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id AND id_product = apex_application.g_x01;
+    COMMIT;
+    apex_json.open_object;
+	apex_json.write('if_successful', true);
+	apex_json.close_object;
 END;
 /*
-Sequence nine. Sending a message to our sales representative.
+Sequence nine. User placing an order.
 */
+DECLARE
+    is_logged BOOLEAN;
+    n         NUMBER(1);
+    CURSOR order_cust IS SELECT id_product FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id;
 BEGIN
+	SELECT count(id_user) INTO n FROM users WHERE id_user = :ID_USER;
+    IF n = 1 THEN
+       FOR product IN order_cust LOOP
+            INSERT INTO customer_subscriptions(id_user, id_product, availability) VALUES (:ID_USER, product.id_product, 'n');
+       END LOOP;
+       COMMIT;
+       is_logged := true;
+    ELSE
+       is_logged := false;
+    END IF;
+   	apex_json.open_object;
+    apex_json.write('is_logged', is_logged);
+	apex_json.close_object;
+END;
+/*
+Sequence ten. The process of sending an individual message by the user to the designated sales representative.
+*/
+DECLARE
+    mess_obj JSON_OBJECT_T;
+BEGIN
+    mess_obj := JSON_OBJECT_T();
+    mess_obj.put('to_whom', apex_application.g_x01);
+    mess_obj.put('content', apex_application.g_x02);
+    mess_obj.put('file', apex_application.g_x03);
+    :MESSAGE := mess_obj.stringify;
 	INSERT INTO messages(id_user, id_emp, message_status, content_message, content_translation_pl)
 		VALUES (:ID_USER, apex_application.g_x01, '4', apex_application.g_x02||' File: '||apex_application.g_x03, 'This message is not translated yet.');
     COMMIT;
     apex_json.open_object;
-	apex_json.write('if_successful', true);
+   	apex_json.write('if_successful', true);
 	apex_json.close_object;
 EXCEPTION
 	WHEN others THEN
@@ -171,7 +205,7 @@ EXCEPTION
 		apex_json.close_object;
 END;
 /*
-Sequence ten. Top-up of the user's account with the amount of one and a half euros.
+Sequence eleven. The process of topping up the user's account by one and a half euros for clicking on an individual permalink.
 */
 BEGIN
     INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (apex_application.g_x01, 2, 1.50, 'The guest with IP address '||owa_util.get_cgi_env('REMOTE_ADDR')||' has credited your account with the amount of one and a half euros.');

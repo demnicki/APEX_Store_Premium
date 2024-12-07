@@ -1,4 +1,4 @@
-var v_login_mail = '@';
+var v_login_mail = 'tester@szkoleniapex.pl';
 
 var array_colors = [
     'white',
@@ -126,6 +126,16 @@ function copy_link(link){
     apex.message.alert('Link copied.');
 };
 
+function copy_swift(){
+    navigator.clipboard.writeText('ALBPPLPW');
+    apex.message.alert('SWIFT code copied.');
+};
+
+function copy_iban(){
+    navigator.clipboard.writeText('PL76249000050000400005540768');
+    apex.message.alert('IBAN bank account number copied.');
+};
+
 function logo_shop() {
     var random_n = 0;
     var text_input_logo = '';
@@ -140,13 +150,13 @@ function send_message() {
     apex.server.process(
         'Send_mess',
         {
-            X01: 'To: '+apex.item('P15_LIST').getValue()+'. ',
+            X01: apex.item('P15_LIST').getValue(),
             X02: apex.item('P15_MESSAG').getValue(),
             X03: apex.item('P15_FILE').getValue()
         },
         {
             success: function (Data) {},
-            dataType: "text"
+            dataType: "json"
         },
         {
             error: function () {}

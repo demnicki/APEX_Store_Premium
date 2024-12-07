@@ -16,11 +16,11 @@ function add_product(id_prod) {
     );    
 };
 
-function decrease(nr_prod){
+function decrease(id_prod){
    apex.server.process(
         'Decrease_quantity',
         {
-            X01: nr_prod
+            X01: id_prod
         },
         {
             success: function (Data) {
@@ -41,11 +41,11 @@ function decrease(nr_prod){
 
 };
 
-function increase(nr_prod){
+function increase(id_prod){
     apex.server.process(
         'Increase_quantity',
         {
-            X01: nr_prod
+            X01: id_prod
         },
         {
             success: function (Data) {
@@ -58,4 +58,46 @@ function increase(nr_prod){
         }
     );
     
+};
+
+function delete_product(id_prod){
+    apex.server.process(
+        'Delete_product',
+        {
+            X01: id_prod
+        },
+        {
+            success: function (Data) {
+                apex.message.alert('The product has been removed.');
+            },
+            dataType: "json"
+        },
+        {
+            error: function () {}
+        }
+    );
+};
+
+function place_order(){
+    apex.server.process(
+        'Place_order',
+        {},
+        {
+            success: function (Data) {
+                if (Data.is_logged){
+                    apex.message.alert('Your order has been placed. Go to your user panel.');
+                }else{
+                    apex.message.alert('To place an order, please log in or register first.');
+                };                
+            },
+            dataType: "json"
+        },
+        {
+            error: function () {}
+        }
+    );
+};
+
+function download(){
+  apex.message.alert('This service or product has not been paid for yet. Check your transaction history.');
 };

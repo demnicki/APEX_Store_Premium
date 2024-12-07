@@ -22,5 +22,5 @@ Controller returning a BLOB image with a specific product icon.
 */
 
 /*
-Controller returning a BLOB image with a specific product icon.
+A controller returning JSON with the current contents of the user's shopping cart.
 */

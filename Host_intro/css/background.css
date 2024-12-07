@@ -29,11 +29,15 @@ font-family: Arial;
 }
 
 .motto {
+    background-color: black;
+    border-radius: 25px;
     font-size: 20px;
+    padding: 3%;
 }
 
 .logo {
     font-size: 70px;
+    padding: 3%;
 }
 
 .circle {
@@ -44,7 +48,7 @@ font-family: Arial;
     width: 50px;
     height: 50px;
     background-color: #FFD700;
-    padding: 2%;
+    padding: 5%;
     align-items: center;
     justify-content: center;
 }

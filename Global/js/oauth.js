@@ -9,14 +9,13 @@ function register() {
         },
         {
             success: function (Data) {
-                var object = JSON.parse(Data);
-                if (object.if_successful) {
-                    apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":12:" + apex.env.APP_SESSION);
+                if (Data.if_successful) {
+                    apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
                 } else {
                     apex.message.alert('Fatal error. Please try again or contact support. Comm: ' + Data);
                 };
             },
-            dataType: "text"
+            dataType: "json"
         },
         {
             error: function () { apex.message.alert('Fatal error. Please try again or contact support.'); }
@@ -32,19 +31,13 @@ function login_user(login_mail) {
         },
         {
             success: function (Data) {
-                var obj_json = JSON.parse(Data);
-                if (obj_json.v_is_register) {
-                    if (obj_json.v_have_pay_subsc) {
-                        apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
-                    } else {
-                        apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":12:" + apex.env.APP_SESSION);
-                    };
-                }
-                else {
+                if (Data.v_is_register) {
+                    apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
+                } else {
                     apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":3:" + apex.env.APP_SESSION);
                 };
             },
-            dataType: "text"
+            dataType: "json"
         },
         {
             error: function () { apex.message.alert('Fatal error. Please try again or contact support.'); }
