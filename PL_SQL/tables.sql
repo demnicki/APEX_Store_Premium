@@ -54,7 +54,7 @@ CREATE TABLE nrs_tel(
 CREATE TABLE api_sessions(
 	session_number  CHAR(16 CHAR) NOT NULL,
 	ip              CHAR(15 CHAR),
-	agent           VARCHAR(250 CHAR),
+	agent           VARCHAR(300 CHAR),
 	start_session   DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_session_number PRIMARY KEY (session_number)
 );
