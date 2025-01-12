@@ -1,3 +1,13 @@
+/* This is a recruitment task. Code two JacaScript functions, to handle two login buttons. */
+
+function button_google() [...?...]
+
+/* And handle button login with Facebook OAuth. */
+
+function button_fb() [...?...]
+
+/* Below you have the functions that already work properly. */
+
 function register() {
     apex.server.process(
         'Register',
