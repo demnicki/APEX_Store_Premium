@@ -12,7 +12,6 @@ BEGIN
 		INSERT INTO api_sessions(session_number, ip, agent) VALUES (apex_custom_auth.get_session_id, owa_util.get_cgi_env('REMOTE_ADDR'), owa_util.get_cgi_env('HTTP_USER_AGENT'));
 		COMMIT;
     	:NR_IF_LOGIN := 0;
-		:NR_ANIM := 1;
 		:NR_INBOX := 1;
 		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
@@ -26,19 +25,6 @@ BEGIN
     		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
         END IF;
 	END IF;
-	IF :NR_ANIM = 1 THEN
-		:TEXT_ANIM := 'Turn off movie animation.';
-	ELSIF :NR_ANIM = 0 THEN
-		:TEXT_ANIM := 'Turn on movie animation.';
-	END IF;
-END;
-/*
-Sequence two. Setting the animation mode.
-*/
-BEGIN
-    :NR_ANIM := apex_application.g_x01;
-    UPDATE users SET anim_type = apex_application.g_x01 WHERE id_user = :ID_USER;
-    COMMIT;
 END;
 /*
 Sequence three. User login.
@@ -55,7 +41,6 @@ BEGIN
 	IF v_is_register THEN
 		SELECT id_user, anim_type, unread_messages, name_user INTO v_id_user, v_anim_type, v_unread_messages, v_name_user FROM users WHERE login_email = :LOGIN_EMAIL;
         :NR_IF_LOGIN := 1;
-        :NR_ANIM := v_anim_type;
 		:NR_INBOX := v_unread_messages;
 		:ID_USER := v_id_user;
 		:NAME_USER := v_name_user;

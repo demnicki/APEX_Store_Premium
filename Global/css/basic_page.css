@@ -5,7 +5,6 @@ body {
 }
 
 #background_movie {
-    display: none;
     position: fixed;
     right: 0;
     bottom: 0;
@@ -23,6 +22,20 @@ body {
     text-align: center;
     font-size: 70px;
 }
+
+.table_shop {
+    display: flex;
+    flex-direction: row;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 25px;
+    padding: 2%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 15px;
+}
+
 .right {
     background: rgba(225,225,225, 0.7);
     color: black;
@@ -75,6 +88,7 @@ body {
     align-items: center;
     justify-content: center;
 }
+
 .t-Footer {
     margin-left: 40%;
     margin-right: 40%;

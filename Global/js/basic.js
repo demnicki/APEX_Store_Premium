@@ -33,51 +33,16 @@ var array_logo = [
     'u',
     'm'];
 
-function init_anim(nr_anim) {
-    var v_nr_anim = parseInt(nr_anim);
-    if (v_nr_anim == 1) {
-        document.getElementById('background_movie').style.display = 'block';
-    } else if (v_nr_anim == 0) {
-        document.getElementById('background_movie').style.display = 'none';
-    };
-    apex.server.process(
-        'Turn_anim',
-        {
-            x01: v_nr_anim
-        },
-        {
-            success: function (Data) {},
-            dataType: "text"
-        },
-        {
-            error: function () {}
-        }
-    );
-};
-
-function turn_anim(nr_anim) {
-    var v_nr_anim = parseInt(nr_anim);
-    if (v_nr_anim == 1) {
-        init_anim(0);
-    }
-    else if (v_nr_anim == 0) {
-        init_anim(1);
-    };
-};
-
 function to_login_page() {
     apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":9999:" + apex.env.APP_SESSION);
 };
 
-function go_to_panel(nr_if_login, eur) {
+function go_to_panel(nr_if_login) {
     var v_nr_if_login = parseInt(nr_if_login);
     var v_eur = parseFloat(eur);
-    if (v_nr_if_login == 1 && v_eur > 5) {
+    if (v_nr_if_login == 1) {
         apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
-    }
-    else if (v_nr_if_login == 1 && v_eur < 5) {
-        apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":12:" + apex.env.APP_SESSION);
-    } else {
+    }else {
         apex.message.alert('You are not logged in.');
     };
 };

@@ -1,13 +1,3 @@
-/* This is a recruitment task. Code two JacaScript functions, to handle two login buttons. */
-
-function button_google() [...?...]
-
-/* And handle button login with Facebook OAuth. */
-
-function button_fb() [...?...]
-
-/* Below you have the functions that already work properly. */
-
 function register() {
     apex.server.process(
         'Register',
@@ -15,7 +5,7 @@ function register() {
             x01: apex.item("GENDER").getValue(),
             x02: apex.item("LANGUAGE").getValue(),
             x03: apex.item("NR_TEL").getValue(),
-            x04: apex.item("FULL_NAME").getValue()
+            x04: apex.item("FIRST_NAME").getValue() + ' ' + apex.item("SURNAME").getValue()
         },
         {
             success: function (Data) {
@@ -31,6 +21,11 @@ function register() {
             error: function () { apex.message.alert('Fatal error. Please try again or contact support.'); }
         }
     );
+};
+
+function send_mail() {
+    var address = apex.item('P9999_EMAIL').getValue();
+    apex.message.alert('Receive your email with a link to log in to your account, in your inbox ' + address + '.');
 };
 
 function login_user(login_mail) {
