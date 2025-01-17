@@ -36,7 +36,9 @@ CREATE TABLE users(
 	language_user   CHAR(2 CHAR) NOT NULL,
 	anim_type       NUMBER(1) DEFAULT 1 NOT NULL,
 	unread_messages NUMBER(1) DEFAULT 0 NOT NULL,
-	name_user       VARCHAR(300 CHAR),
+	first_name      VARCHAR(100 CHAR),
+	second_name     VARCHAR(100 CHAR),
+	surname         VARCHAR(200 CHAR),
 	date_created    DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_login_email PRIMARY KEY (login_email),
 	CONSTRAINT c_id_user UNIQUE (id_user),
@@ -107,8 +109,6 @@ CREATE TABLE products(
 	product_type CHAR(1 CHAR) NOT NULL,
 	price        NUMBER(6, 2) DEFAULT 0.01 NOT NULL,
 	image        BLOB,
-	desc_en      CLOB,
-	desc_ar      CLOB,
 	CONSTRAINT c_id_product PRIMARY KEY (id),
 	CONSTRAINT c_type_product_1 FOREIGN KEY (product_type) REFERENCES product_type(id)
 );

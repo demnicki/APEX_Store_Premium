@@ -32,18 +32,19 @@ Sequence three. User login.
 DECLARE
 	v_is_register     BOOLEAN := false;
 	v_id_user         users.id_user%TYPE;
-    v_anim_type       users.anim_type%TYPE;
     v_unread_messages users.unread_messages%TYPE;
-	v_name_user       users.name_user%TYPE;
+	v_first_name      users.first_name%TYPE;
+	v_second_name     users.second_name%TYPE;
+	v_surname         users.surname%TYPE;
 BEGIN
 	:LOGIN_EMAIL := lower(apex_application.g_x01);
 	v_is_register := authentication.is_exist_user(:LOGIN_EMAIL);
 	IF v_is_register THEN
-		SELECT id_user, anim_type, unread_messages, name_user INTO v_id_user, v_anim_type, v_unread_messages, v_name_user FROM users WHERE login_email = :LOGIN_EMAIL;
+		SELECT id_user, unread_messages, first_name, second_name, surname INTO v_id_user, v_unread_messages, v_first_name, v_second_name, v_surname FROM users WHERE login_email = :LOGIN_EMAIL;
         :NR_IF_LOGIN := 1;
 		:NR_INBOX := v_unread_messages;
 		:ID_USER := v_id_user;
-		:NAME_USER := v_name_user;
+		:NAME_USER := v_first_name||' '||v_second_name||' '||v_surname;
 		:EUR := shop.available_eur(v_id_user);
 	END IF;
 	apex_json.open_object;
@@ -61,14 +62,14 @@ BEGIN
 	if_successful := false;
 	SELECT count(login_email) INTO n FROM users WHERE login_email = :LOGIN_EMAIL;
 	IF n = 0 THEN
-		INSERT INTO users(login_email, gender_user, language_user, name_user) VALUES (:LOGIN_EMAIL, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x04);
+		INSERT INTO users(login_email, gender_user, language_user, first_name, second_name, surname) VALUES (:LOGIN_EMAIL, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x03, apex_application.g_x04, apex_application.g_x05);
 		COMMIT;
 		SELECT id_user INTO v_id_user FROM users WHERE login_email = :LOGIN_EMAIL;
 		INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (v_id_user, 1, 1.50, 'A new account has been created with login '||:LOGIN_EMAIL||'.');
 		COMMIT;
 		if_successful := true;
 		IF length(apex_application.g_x03) > 5 THEN
-			INSERT INTO nrs_tel(nr_tel, id_user) VALUES (apex_application.g_x03, v_id_user);
+			INSERT INTO nrs_tel(nr_tel, id_user) VALUES (apex_application.g_x06, v_id_user);
 			COMMIT;
 		END IF;
 
@@ -76,7 +77,7 @@ BEGIN
 	:NR_IF_LOGIN := 1;
 	:EUR := 1.50;
 	:ID_USER := v_id_user;
-	:NAME_USER := apex_application.g_x04;
+	:NAME_USER := apex_application.g_x03||' '||apex_application.g_x04||' '||apex_application.g_x05;
 	apex_json.open_object;
 	apex_json.write('if_successful', if_successful);
 	apex_json.close_object;

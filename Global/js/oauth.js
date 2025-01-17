@@ -4,8 +4,10 @@ function register() {
         {
             x01: apex.item("GENDER").getValue(),
             x02: apex.item("LANGUAGE").getValue(),
-            x03: apex.item("NR_TEL").getValue(),
-            x04: apex.item("FIRST_NAME").getValue() + ' ' + apex.item("SURNAME").getValue()
+            x03: apex.item("FIRST_NAME").getValue(),
+            X04: apex.item("SECOND_NAME").getValue(),
+            X05: apex.item("SURNAME").getValue(),
+            X06: apex.item("NR_TEL").getValue(),
         },
         {
             success: function (Data) {

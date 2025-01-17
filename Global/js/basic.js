@@ -1,4 +1,3 @@
-var v_login_mail = 'tester@szkoleniapex.pl';
 
 var array_colors = [
     'white',
@@ -39,7 +38,6 @@ function to_login_page() {
 
 function go_to_panel(nr_if_login) {
     var v_nr_if_login = parseInt(nr_if_login);
-    var v_eur = parseFloat(eur);
     if (v_nr_if_login == 1) {
         apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
     }else {
