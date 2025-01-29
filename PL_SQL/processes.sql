@@ -15,12 +15,11 @@ BEGIN
 		:NR_INBOX := 1;
 		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
-        :LINK_PG_9 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':9:'||:APP_SESSION||'::NO::');
         :LINK_PG_16 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':16:'||:APP_SESSION||'::NO::');
         :LINK_PG_18 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':18:'||:APP_SESSION||'::NO::');
 	ELSIF n = 1 THEN
 		IF :NR_IF_LOGIN = 1 THEN
-    		:TEXT_IF_LOGIN := 'Logged in as: '||lower(:LOGIN_EMAIL)||'.';
+    		:TEXT_IF_LOGIN := 'My user panel: '||lower(:LOGIN_EMAIL)||'.';
     	ELSIF :NR_IF_LOGIN = 0 THEN
     		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
         END IF;

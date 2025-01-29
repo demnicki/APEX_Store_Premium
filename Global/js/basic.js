@@ -32,16 +32,12 @@ var array_logo = [
     'u',
     'm'];
 
-function to_login_page() {
-    apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":9999:" + apex.env.APP_SESSION);
-};
-
 function go_to_panel(nr_if_login) {
     var v_nr_if_login = parseInt(nr_if_login);
     if (v_nr_if_login == 1) {
         apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);
     }else {
-        apex.message.alert('You are not logged in.');
+        apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":9999:" + apex.env.APP_SESSION);
     };
 };
 

@@ -24,6 +24,8 @@ body {
 }
 
 .table_shop {
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: row;
     background: rgba(0, 0, 0, 0.5);
