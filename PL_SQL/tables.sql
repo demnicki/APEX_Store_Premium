@@ -30,9 +30,11 @@ CREATE TABLE languages(
 );
 
 CREATE TABLE tokens_url(
-	login_email VARCHAR(100 CHAR) NOT NULL,
-	id_user     NUMBER(4) DEFAULT ON NULL seq_tokens.NEXTVAL NOT NULL,
-	token       CHAR(3 CHAR) NOT NULL,
+	login_email  VARCHAR(100 CHAR) NOT NULL,
+	id_user      NUMBER(4) DEFAULT ON NULL seq_tokens.NEXTVAL NOT NULL,
+	token        CHAR(3 CHAR) NOT NULL,	
+	date_created DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	date_update  DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_login_email PRIMARY KEY (login_email),
 	CONSTRAINT c_id_user UNIQUE (id_user)
 );
@@ -46,7 +48,6 @@ CREATE TABLE user_profiles(
 	first_name      VARCHAR(100 CHAR),
 	second_name     VARCHAR(100 CHAR),
 	surname         VARCHAR(200 CHAR),
-	date_created    DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT c_id_user_1 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user),
 	CONSTRAINT c_id_user_2 UNIQUE (id_user),
 	CONSTRAINT c_gender_user CHECK ((gender_user) in ('m','f', 'n')),

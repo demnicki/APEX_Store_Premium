@@ -27,32 +27,44 @@ BEGIN
 END;
 /*
 Sequence two. Sending the token by email.
-*/
+*/DECLARE
+	n NUMBER(1);
 BEGIN
-	NULL;
+	SELECT count(login_email) INTO n FROM tokens_url WHERE login_email = apex_application.g_x01;
+	IF n = 1 THEN
+		UPDATE tokens_url SET date_update = CURRENT_TIMESTAMP, token = apex_application.g_x02 WHERE login_email = apex_application.g_x01;
+	ELSIF n = 0 THEN
+		INSERT INTO tokens_url(login_email, token) VALUES (apex_application.g_x01, apex_application.g_x02);
+	END IF;
+EXCEPTION
+	WHEN others THEN
+		ROLLBACK;
 END;
 /*
 Sequence three. User login.
+SELECT count(id_user) INTO n2 FROM user_profiles WHERE id_user = (SELECT id_user FROM tokens_url WHERE token = :token);
+v_first_name||' '||v_second_name||' '||v_surname;
 */
 DECLARE
+	n1 NUMBER(1);
+	n2 NUMBER(1);
+	v_is_exist        BOOLEAN := false;
 	v_is_register     BOOLEAN := false;
-	v_id_user         users.id_user%TYPE;
-    v_unread_messages users.unread_messages%TYPE;
-	v_first_name      users.first_name%TYPE;
-	v_second_name     users.second_name%TYPE;
-	v_surname         users.surname%TYPE;
+	v_id_user         tokens_url.id_user%TYPE;
+    v_unread_messages user_profiles.unread_messages%TYPE;
+	v_name_user       VARCHAR(500 CHAR);
 BEGIN
-	:LOGIN_EMAIL := lower(apex_application.g_x01);
 	v_is_register := authentication.is_exist_user(:LOGIN_EMAIL);
 	IF v_is_register THEN
 		SELECT id_user, unread_messages, first_name, second_name, surname INTO v_id_user, v_unread_messages, v_first_name, v_second_name, v_surname FROM users WHERE login_email = :LOGIN_EMAIL;
         :NR_IF_LOGIN := 1;
 		:NR_INBOX := v_unread_messages;
 		:ID_USER := v_id_user;
-		:NAME_USER := v_first_name||' '||v_second_name||' '||v_surname;
+		:NAME_USER := v_name_user;
 		:EUR := shop.available_eur(v_id_user);
 	END IF;
 	apex_json.open_object;
+	apex_json.write('v_is_exist', v_is_exist);
 	apex_json.write('v_is_register', v_is_register);
 	apex_json.close_object;
 END;
