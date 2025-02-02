@@ -42,7 +42,7 @@ EXCEPTION
 END;
 /*
 Sequence three. User login.
-SELECT count(id_user) INTO n2 FROM user_profiles WHERE id_user = (SELECT id_user FROM tokens_url WHERE token = :token);
+
 v_first_name||' '||v_second_name||' '||v_surname;
 */
 DECLARE
@@ -53,15 +53,21 @@ DECLARE
 	v_id_user         tokens_url.id_user%TYPE;
     v_unread_messages user_profiles.unread_messages%TYPE;
 	v_name_user       VARCHAR(500 CHAR);
-BEGIN
-	v_is_register := authentication.is_exist_user(:LOGIN_EMAIL);
-	IF v_is_register THEN
-		SELECT id_user, unread_messages, first_name, second_name, surname INTO v_id_user, v_unread_messages, v_first_name, v_second_name, v_surname FROM users WHERE login_email = :LOGIN_EMAIL;
-        :NR_IF_LOGIN := 1;
-		:NR_INBOX := v_unread_messages;
-		:ID_USER := v_id_user;
-		:NAME_USER := v_name_user;
-		:EUR := shop.available_eur(v_id_user);
+BEGIN	
+	SELECT count(id_user INTO n1 FROM tokens_url WHERE token = apex_application.g_x01;	
+	IF n1 = 1 THEN
+		SELECT id_user INTO v_id_user FROM tokens_url WHERE token = apex_application.g_x01;
+		SELECT count(id_user) INTO n2 FROM user_profiles WHERE id_user = v_id_user;
+		v_is_exist := true;
+		IF n2 = 1 THEN
+			SELECT unread_messages, v_first_name||' '||v_second_name||' '||v_surname INTO v_unread_messages, v_name_user FROM user_profiles WHERE id_user = v_id_user;
+			v_is_register := true;
+			:NR_IF_LOGIN := 1;
+			:NR_INBOX := v_unread_messages;
+			:ID_USER := v_id_user;
+			:NAME_USER := v_name_user;
+			:EUR := shop.available_eur(v_id_user);
+		END IF;
 	END IF;
 	apex_json.open_object;
 	apex_json.write('v_is_exist', v_is_exist);
