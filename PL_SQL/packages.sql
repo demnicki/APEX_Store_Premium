@@ -5,15 +5,15 @@ Creating packages of procedures and functions named "Authentication".
 */
 CREATE OR REPLACE PACKAGE authentication
 IS
-	FUNCTION is_exist_user(a_login_email users.login_email%TYPE) RETURN BOOLEAN;
+	FUNCTION is_exist_user(a_id_user tokens_url.id_user%TYPE) RETURN BOOLEAN;
 END authentication;
 
 CREATE OR REPLACE PACKAGE BODY authentication
 IS
-	FUNCTION is_exist_user(a_login_email users.login_email%TYPE) RETURN BOOLEAN IS
+	FUNCTION is_exist_user(a_id_user tokens_url.id_user%TYPE) RETURN BOOLEAN IS
 		n NUMBER(1);
 	BEGIN
-		SELECT count(login_email) INTO n FROM users WHERE login_email = a_login_email;
+		SELECT count(id_user) INTO n FROM user_profiles WHERE id_user = a_id_user;
 		IF n = 1 THEN
 			RETURN true;
 		ELSE
@@ -29,7 +29,7 @@ IS
 	FUNCTION not_empty(a_session_nr api_sessions.session_number%TYPE) RETURN BOOLEAN;
 	FUNCTION cart_value(a_session_nr api_sessions.session_number%TYPE) RETURN VARCHAR2;
 	FUNCTION monthly_subs(a_session_nr api_sessions.session_number%TYPE) RETURN VARCHAR2;
-	FUNCTION available_eur(a_id_user users.id_user%TYPE) RETURN VARCHAR2;
+	FUNCTION available_eur(a_id_user tokens_url.id_user%TYPE) RETURN VARCHAR2;
 END shop;
 
 CREATE OR REPLACE PACKAGE BODY shop
@@ -76,7 +76,7 @@ IS
 		END IF;
 	END monthly_subs;
 
-	FUNCTION available_eur(a_id_user users.id_user%TYPE) RETURN VARCHAR2
+	FUNCTION available_eur(a_id_user tokens_url.id_user%TYPE) RETURN VARCHAR2
 	IS
 		v_eur NUMBER(8,2) := 0;
 	BEGIN

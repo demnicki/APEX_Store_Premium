@@ -26,6 +26,12 @@ BEGIN
 	END IF;
 END;
 /*
+Sequence two. Sending the token by email.
+*/
+BEGIN
+	NULL;
+END;
+/*
 Sequence three. User login.
 */
 DECLARE

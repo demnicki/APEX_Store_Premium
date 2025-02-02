@@ -4,7 +4,7 @@ Creating all the number sequences and tables and views in this project.
 Creating number sequences.
 */
 
-CREATE SEQUENCE seq_users
+CREATE SEQUENCE seq_tokens
 MINVALUE   1000
 MAXVALUE   9999
 START WITH 1000;
@@ -29,19 +29,26 @@ CREATE TABLE languages(
 	CONSTRAINT c_id_lang PRIMARY KEY (id_lang)
 );
 
-CREATE TABLE users(
-	login_email     VARCHAR(100 CHAR) NOT NULL,
-	id_user         NUMBER(4) DEFAULT ON NULL seq_users.NEXTVAL NOT NULL,
+CREATE TABLE tokens_url(
+	login_email VARCHAR(100 CHAR) NOT NULL,
+	id_user     NUMBER(4) DEFAULT ON NULL seq_tokens.NEXTVAL NOT NULL,
+	token       CHAR(3 CHAR) NOT NULL,
+	CONSTRAINT c_login_email PRIMARY KEY (login_email),
+	CONSTRAINT c_id_user UNIQUE (id_user)
+);
+
+
+CREATE TABLE user_profiles(	
+	id_user         NUMBER(4) NOT NULL,
 	gender_user     CHAR(1 CHAR) NOT NULL,
 	language_user   CHAR(2 CHAR) NOT NULL,
-	anim_type       NUMBER(1) DEFAULT 1 NOT NULL,
 	unread_messages NUMBER(1) DEFAULT 0 NOT NULL,
 	first_name      VARCHAR(100 CHAR),
 	second_name     VARCHAR(100 CHAR),
 	surname         VARCHAR(200 CHAR),
 	date_created    DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	CONSTRAINT c_login_email PRIMARY KEY (login_email),
-	CONSTRAINT c_id_user UNIQUE (id_user),
+	CONSTRAINT c_id_user_1 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user),
+	CONSTRAINT c_id_user_2 UNIQUE (id_user),
 	CONSTRAINT c_gender_user CHECK ((gender_user) in ('m','f', 'n')),
 	CONSTRAINT c_language_user FOREIGN KEY (language_user) REFERENCES languages(id_lang)
 );
@@ -50,7 +57,7 @@ CREATE TABLE nrs_tel(
 	nr_tel  CHAR(15 CHAR) NOT NULL,
 	id_user NUMBER(4) NOT NULL,
 	CONSTRAINT c_nr_tel PRIMARY KEY (nr_tel),
-	CONSTRAINT c_id_user_1 FOREIGN KEY (id_user) REFERENCES users(id_user)
+	CONSTRAINT c_id_user_3 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user)
 );
 
 CREATE TABLE api_sessions(
@@ -65,7 +72,7 @@ CREATE TABLE user_sessions(
 	session_number  CHAR(16 CHAR) NOT NULL,
 	id_user         NUMBER(4) NOT NULL,
 	CONSTRAINT c_session_number_1 FOREIGN KEY (session_number) REFERENCES api_sessions(session_number),
-	CONSTRAINT c_id_user_2 FOREIGN KEY (id_user) REFERENCES users(id_user)
+	CONSTRAINT c_id_user_4 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user)
 );
 
 CREATE TABLE transaction_type(
@@ -84,7 +91,7 @@ CREATE TABLE account_operations(
 	date_operation DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	description    VARCHAR(1000 CHAR),
 	CONSTRAINT c_id_trans PRIMARY KEY (id_trans),
-	CONSTRAINT c_id_user_3 FOREIGN KEY (id_user) REFERENCES users(id_user),
+	CONSTRAINT c_id_user_5 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user),
 	CONSTRAINT c_id_type_1 FOREIGN KEY (id_type) REFERENCES transaction_type(id_type)
 );
 
@@ -94,7 +101,7 @@ CREATE TABLE employees(
 	name_emp    VARCHAR(200 CHAR),
 	nr_tel      CHAR(15 CHAR),
 	CONSTRAINT c_id_emp PRIMARY KEY (id_emp),
-	CONSTRAINT c_id_user_4 FOREIGN KEY (id_user) REFERENCES users(id_user)
+	CONSTRAINT c_id_user_6 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user)
 );
 
 CREATE TABLE product_type(
@@ -124,8 +131,8 @@ CREATE TABLE shopping_cart(
 CREATE TABLE customer_subscriptions(
 	id_user      NUMBER(4) NOT NULL,
 	id_product   NUMBER(2) NOT NULL,
-	availability CHAR(1 CHAR) NOT NULL,
-	CONSTRAINT c_id_user_5 FOREIGN KEY (id_user) REFERENCES users(id_user),
+	availability CHAR(1 CHAR) DEFAULT 'n' NOT NULL,
+	CONSTRAINT c_id_user_7 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user),
 	CONSTRAINT c_id_product_2 FOREIGN KEY (id_product) REFERENCES products(id),
 	CONSTRAINT c_availability CHECK ((availability) in ('y','n'))
 );
@@ -145,7 +152,7 @@ CREATE TABLE messages(
 	content_message        CLOB,
 	content_translation_pl CLOB,
 	CONSTRAINT c_id_message PRIMARY KEY (id_message),
-	CONSTRAINT c_id_user_6 FOREIGN KEY (id_user) REFERENCES users(id_user),
+	CONSTRAINT c_id_user_8 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user),
 	CONSTRAINT c_id_emp_1 FOREIGN KEY (id_emp) REFERENCES employees(id_emp),
 	CONSTRAINT c_message_status_1 FOREIGN KEY (message_status) REFERENCES message_status(id)
 );
