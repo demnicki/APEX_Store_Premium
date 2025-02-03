@@ -11,7 +11,8 @@ BEGIN
 END;
 /*
 Controller for handling individual promotional permalink.
-*/BEGIN
+*/
+BEGIN
     htp.p('<script>');
     htp.p('localStorage.setItem(''token'', '||:token||');');
     htp.p('</script>');

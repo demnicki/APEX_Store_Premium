@@ -1,27 +1,6 @@
 /*
 Creating packages of PL/SQL procedures and functions for the entire project.
 
-Creating packages of procedures and functions named "Authentication".
-*/
-CREATE OR REPLACE PACKAGE authentication
-IS
-	FUNCTION is_exist_user(a_id_user tokens_url.id_user%TYPE) RETURN BOOLEAN;
-END authentication;
-
-CREATE OR REPLACE PACKAGE BODY authentication
-IS
-	FUNCTION is_exist_user(a_id_user tokens_url.id_user%TYPE) RETURN BOOLEAN IS
-		n NUMBER(1);
-	BEGIN
-		SELECT count(id_user) INTO n FROM user_profiles WHERE id_user = a_id_user;
-		IF n = 1 THEN
-			RETURN true;
-		ELSE
-			RETURN false;
-		END IF;
-	END is_exist_user;
-END authentication;
-/*
 Creating packages of procedures and functions named "Shop".
 */
 CREATE OR REPLACE PACKAGE shop

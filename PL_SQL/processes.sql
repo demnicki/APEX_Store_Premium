@@ -36,35 +36,43 @@ BEGIN
 	ELSIF n = 0 THEN
 		INSERT INTO tokens_url(login_email, token) VALUES (apex_application.g_x01, apex_application.g_x02);
 	END IF;
+	COMMIT;
+		apex_json.open_object;
+		apex_json.write('if_successful', true);
+		apex_json.close_object;
 EXCEPTION
 	WHEN others THEN
 		ROLLBACK;
+		ROLLBACK;
+		apex_json.open_object;
+		apex_json.write('if_successful', false);
+		apex_json.close_object;
 END;
 /*
 Sequence three. User login.
-
-v_first_name||' '||v_second_name||' '||v_surname;
 */
 DECLARE
 	n1 NUMBER(1);
 	n2 NUMBER(1);
 	v_is_exist        BOOLEAN := false;
 	v_is_register     BOOLEAN := false;
+	v_login_email     tokens_url.login_email%TYPE;
 	v_id_user         tokens_url.id_user%TYPE;
     v_unread_messages user_profiles.unread_messages%TYPE;
 	v_name_user       VARCHAR(500 CHAR);
 BEGIN	
 	SELECT count(id_user INTO n1 FROM tokens_url WHERE token = apex_application.g_x01;	
 	IF n1 = 1 THEN
-		SELECT id_user INTO v_id_user FROM tokens_url WHERE token = apex_application.g_x01;
+		SELECT id_user, login_email INTO v_id_user, v_login_email FROM tokens_url WHERE token = apex_application.g_x01;
 		SELECT count(id_user) INTO n2 FROM user_profiles WHERE id_user = v_id_user;
 		v_is_exist := true;
+		:LOGIN_EMAIL := v_login_email;
+		:ID_USER := v_id_user;
 		IF n2 = 1 THEN
-			SELECT unread_messages, v_first_name||' '||v_second_name||' '||v_surname INTO v_unread_messages, v_name_user FROM user_profiles WHERE id_user = v_id_user;
+			SELECT unread_messages, first_name||' '||second_name||' '||surname INTO v_unread_messages, v_name_user FROM user_profiles WHERE id_user = v_id_user;
 			v_is_register := true;
 			:NR_IF_LOGIN := 1;
 			:NR_INBOX := v_unread_messages;
-			:ID_USER := v_id_user;
 			:NAME_USER := v_name_user;
 			:EUR := shop.available_eur(v_id_user);
 		END IF;
@@ -78,28 +86,21 @@ END;
 Sequence four. New user registration.
 */
 DECLARE
-	if_successful BOOLEAN;
+	if_successful BOOLEAN := false;
 	n             NUMBER(1);
 	v_id_user     users.id_user%TYPE;
 BEGIN
-	if_successful := false;
-	SELECT count(login_email) INTO n FROM users WHERE login_email = :LOGIN_EMAIL;
-	IF n = 0 THEN
-		INSERT INTO users(login_email, gender_user, language_user, first_name, second_name, surname) VALUES (:LOGIN_EMAIL, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x03, apex_application.g_x04, apex_application.g_x05);
+	INSERT INTO user_profiles(id_user, gender_user, language_user, first_name, second_name, surname) VALUES (:ID_USER, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x03, apex_application.g_x04, apex_application.g_x05);
+	COMMIT;
+	INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (:ID_USER, 1, 1.50, 'A new account has been created with login '||:LOGIN_EMAIL||'.');
+	COMMIT;
+	if_successful := true;
+	IF length(apex_application.g_x03) > 5 THEN
+		INSERT INTO nrs_tel(nr_tel, id_user) VALUES (apex_application.g_x06, :ID_USER);
 		COMMIT;
-		SELECT id_user INTO v_id_user FROM users WHERE login_email = :LOGIN_EMAIL;
-		INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (v_id_user, 1, 1.50, 'A new account has been created with login '||:LOGIN_EMAIL||'.');
-		COMMIT;
-		if_successful := true;
-		IF length(apex_application.g_x03) > 5 THEN
-			INSERT INTO nrs_tel(nr_tel, id_user) VALUES (apex_application.g_x06, v_id_user);
-			COMMIT;
-		END IF;
-
 	END IF;
 	:NR_IF_LOGIN := 1;
 	:EUR := 1.50;
-	:ID_USER := v_id_user;
 	:NAME_USER := apex_application.g_x03||' '||apex_application.g_x04||' '||apex_application.g_x05;
 	apex_json.open_object;
 	apex_json.write('if_successful', if_successful);
