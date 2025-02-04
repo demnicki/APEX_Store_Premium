@@ -27,7 +27,8 @@ BEGIN
 END;
 /*
 Sequence two. Sending the token by email.
-*/DECLARE
+*/
+DECLARE
 	n NUMBER(1);
 BEGIN
 	SELECT count(login_email) INTO n FROM tokens_url WHERE login_email = apex_application.g_x01;
@@ -61,7 +62,7 @@ DECLARE
     v_unread_messages user_profiles.unread_messages%TYPE;
 	v_name_user       VARCHAR(500 CHAR);
 BEGIN	
-	SELECT count(id_user INTO n1 FROM tokens_url WHERE token = apex_application.g_x01;	
+	SELECT count(id_user) INTO n1 FROM tokens_url WHERE token = apex_application.g_x01;	
 	IF n1 = 1 THEN
 		SELECT id_user, login_email INTO v_id_user, v_login_email FROM tokens_url WHERE token = apex_application.g_x01;
 		SELECT count(id_user) INTO n2 FROM user_profiles WHERE id_user = v_id_user;
@@ -88,7 +89,6 @@ Sequence four. New user registration.
 DECLARE
 	if_successful BOOLEAN := false;
 	n             NUMBER(1);
-	v_id_user     users.id_user%TYPE;
 BEGIN
 	INSERT INTO user_profiles(id_user, gender_user, language_user, first_name, second_name, surname) VALUES (:ID_USER, lower(apex_application.g_x01), lower(apex_application.g_x02), apex_application.g_x03, apex_application.g_x04, apex_application.g_x05);
 	COMMIT;
@@ -172,19 +172,17 @@ END;
 Sequence nine. User placing an order.
 */
 DECLARE
-    is_logged BOOLEAN;
+    is_logged BOOLEAN := false;
     n         NUMBER(1);
     CURSOR order_cust IS SELECT id_product FROM shopping_cart WHERE session_number = apex_custom_auth.get_session_id;
 BEGIN
-	SELECT count(id_user) INTO n FROM users WHERE id_user = :ID_USER;
+	SELECT count(id_user) INTO n FROM user_profiles WHERE id_user = :ID_USER;
     IF n = 1 THEN
        FOR product IN order_cust LOOP
             INSERT INTO customer_subscriptions(id_user, id_product, availability) VALUES (:ID_USER, product.id_product, 'n');
        END LOOP;
        COMMIT;
        is_logged := true;
-    ELSE
-       is_logged := false;
     END IF;
    	apex_json.open_object;
     apex_json.write('is_logged', is_logged);

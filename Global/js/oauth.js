@@ -32,14 +32,13 @@ function createRandomString(length) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
-}
+};
 
-
-function send_mail() {
+function send_token() {
     var address = apex.item('P9999_EMAIL').getValue();
     var token = createRandomString(3);
     apex.server.process(
-        'Token',
+        'Get_token',
         {
             x01: address,
             x02: token
@@ -52,8 +51,6 @@ function send_mail() {
             error: function () { apex.message.alert('Fatal error. Please try again or contact support.'); }
         }
     );
-};
-    
 };
 
 function login_user() {
