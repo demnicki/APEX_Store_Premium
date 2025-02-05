@@ -1,4 +1,3 @@
-
 var array_colors = [
     'white',
     'darkgoldenrod',

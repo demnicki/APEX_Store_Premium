@@ -7,6 +7,8 @@ DECLARE
 	n NUMBER(1);
 BEGIN
 	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
+    :LINK_PG_16 := apex_page.get_url(p_page => 16);
+    :LINK_PG_18 := apex_page.get_url(p_page => 18);
 	:TEXT_SHOP_CART := 'Value of your shopping cart: '||shop.cart_value(apex_custom_auth.get_session_id)||' EUR.';
 	IF n = 0 THEN
 		INSERT INTO api_sessions(session_number, ip, agent) VALUES (apex_custom_auth.get_session_id, owa_util.get_cgi_env('REMOTE_ADDR'), owa_util.get_cgi_env('HTTP_USER_AGENT'));
@@ -15,11 +17,9 @@ BEGIN
 		:NR_INBOX := 1;
 		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
-        :LINK_PG_16 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':16:'||:APP_SESSION||'::NO::');
-        :LINK_PG_18 := apex_util.prepare_url(p_url => 'f?p='||:APP_ID||':18:'||:APP_SESSION||'::NO::');
 	ELSIF n = 1 THEN
 		IF :NR_IF_LOGIN = 1 THEN
-    		:TEXT_IF_LOGIN := 'My user panel: '||lower(:LOGIN_EMAIL)||'.';
+    		:TEXT_IF_LOGIN := 'My user panel: '||upper(:LOGIN_EMAIL)||'.';
     	ELSIF :NR_IF_LOGIN = 0 THEN
     		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
         END IF;

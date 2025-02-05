@@ -68,7 +68,9 @@ function login_user() {
                         apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":3:" + apex.env.APP_SESSION);
                     };
                 }
-                else {/* */};
+                else {
+                    document.getElementById('center_content').innerHTML = document.getElementById('center_content').innerHTML + '<p>Your login link has expired. You must return to the login process.</p>';
+                };
                 
             },
             dataType: "json"
