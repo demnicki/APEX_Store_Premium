@@ -6,8 +6,7 @@ Sequence one. Every time the page loads.
 DECLARE
 	n NUMBER(1);
 BEGIN
-	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
-    :LINK_PG_16 := apex_page.get_url(p_page => 16);
+	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;    
     :LINK_PG_18 := apex_page.get_url(p_page => 18);
 	:TEXT_SHOP_CART := 'Value of your shopping cart: '||shop.cart_value(apex_custom_auth.get_session_id)||' EUR.';
 	IF n = 0 THEN
@@ -191,19 +190,13 @@ END;
 /*
 Sequence ten. The process of sending an individual message by the user to the designated sales representative.
 */
-DECLARE
-    mess_obj JSON_OBJECT_T;
 BEGIN
-    mess_obj := JSON_OBJECT_T();
-    mess_obj.put('to_whom', apex_application.g_x01);
-    mess_obj.put('content', apex_application.g_x02);
-    mess_obj.put('file', apex_application.g_x03);
-    :MESSAGE := mess_obj.stringify;
 	INSERT INTO messages(id_user, id_emp, message_status, content_message, content_translation_pl)
 		VALUES (:ID_USER, apex_application.g_x01, '4', apex_application.g_x02||' File: '||apex_application.g_x03, 'This message is not translated yet.');
     COMMIT;
     apex_json.open_object;
    	apex_json.write('if_successful', true);
+	apex_json.write('link_pg_16', apex_page.get_url(p_page => 16));
 	apex_json.close_object;
 EXCEPTION
 	WHEN others THEN

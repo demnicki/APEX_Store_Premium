@@ -1,7 +1,6 @@
 ﻿/*
 */
 BEGIN
-	INSERT INTO messages(id_user, id_emp, message_status, content_message, content_translation_pl)
-		VALUES (:ID_USER, :P16_ID_EMP, '4', :P16_CONTENT||' File: '||:P16_FILE, 'This message is not translated yet.');
+	SELECT (SELECT name_emp FROM employees WHERE id_emp = id_emp), content_message INTO :P16_ID_EMP, :P16_CONTENT FROM messages WHERE id_user = :ID_USER ORDER BY date_created DESC FETCH FIRST 1 ROW ONLY;
     COMMIT;
 END;

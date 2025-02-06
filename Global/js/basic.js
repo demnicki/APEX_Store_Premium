@@ -103,25 +103,34 @@ function logo_shop() {
     };
     document.getElementById('logo_shop').innerHTML = text_input_logo;
 };
-
 function send_message() {
     apex.server.process(
         'Send_mess',
         {
-            X01: apex.item('P15_LIST').getValue(),
-            X02: apex.item('P15_MESSAG').getValue(),
-            X03: apex.item('P15_FILE').getValue()
+            X01: apex.item('P2_LIST').getValue(),
+            X02: apex.item('P2_MESSAG').getValue(),
+            X03: apex.item('P2_FILE').getValue()
         },
         {
-            success: function (Data) {},
+            success: function (Data) {
+                apex.navigation.redirect(Data.link_pg_16);
+            },
             dataType: "json"
         },
         {
-            error: function () {}
+            error: function () { }
         }
     );
 };
 
+function get_page(p_url) {
+    document.getElementById('load_page').innerHTML = '<h1>Please wait...</h1>';
+    fetch(p_url).then(function (response) {
+        return response.text();
+    }).then(function (html) {
+        document.getElementById('load_page').innerHTML = html;
+    });
+};
 function get_page(p_url) {
     document.getElementById('load_page').innerHTML = '<h1>Please wait...</h1>'; 
 fetch(p_url).then(function (response) {
