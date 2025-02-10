@@ -135,6 +135,7 @@ CREATE TABLE customer_subscriptions(
 	availability CHAR(1 CHAR) DEFAULT 'n' NOT NULL,
 	CONSTRAINT c_id_user_7 FOREIGN KEY (id_user) REFERENCES tokens_url(id_user),
 	CONSTRAINT c_id_product_2 FOREIGN KEY (id_product) REFERENCES products(id),
+	CONSTRAINT c_subs UNIQUE (id_user, id_product),
 	CONSTRAINT c_availability CHECK ((availability) in ('y','n'))
 );
 
@@ -162,14 +163,14 @@ CREATE TABLE messages(
 Creating views.
 */
 CREATE VIEW quant_products (id_prod, name_product, quantity, cost, minus_product, add_product) AS
-SELECT p.id, p.name_product, s.quantity, '  '||(s.quantity * p.price), '', ''
+SELECT p.id, p.name_product, s.quantity, '€ '||(s.quantity * p.price), '', ''
 FROM product_type t
 INNER JOIN products p ON t.id = p.product_type
 INNER JOIN shopping_cart s ON s.id_product = p.id
 WHERE (s.session_number = apex_custom_auth.get_session_id) AND ((t.id = 'c') OR (t.id = 's'));
 
-CREATE VIEW subs_products (id_prod, name_product, quantity, cost, delete_product) AS
-SELECT p.id, p.name_product, s.quantity, '  '||(s.quantity * p.price), ''
+CREATE VIEW subs_products (id_prod, name_product, cost, delete_product) AS
+SELECT p.id, p.name_product, '€ '||(s.quantity * p.price), ''
 FROM product_type t
 INNER JOIN products p ON t.id = p.product_type
 INNER JOIN shopping_cart s ON s.id_product = p.id

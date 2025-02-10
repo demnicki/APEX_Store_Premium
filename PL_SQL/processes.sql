@@ -192,7 +192,7 @@ Sequence ten. The process of sending an individual message by the user to the de
 */
 BEGIN
 	INSERT INTO messages(id_user, id_emp, message_status, content_message, content_translation_pl)
-		VALUES (:ID_USER, apex_application.g_x01, '4', apex_application.g_x02||' File: '||apex_application.g_x03, 'This message is not translated yet.');
+		VALUES (:ID_USER, apex_application.g_x01, '4', apex_application.g_x02||' Your attachment: '||apex_application.g_x03, 'This message is not translated yet.');
     COMMIT;
     apex_json.open_object;
    	apex_json.write('if_successful', true);

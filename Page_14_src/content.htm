@@ -1,5 +1,14 @@
-﻿<p>The table below contains a list of quantity products. Using the button witch "plus / minus" icon, you can increase / decrease the quantity of a chosen product.</p>
+﻿<p>Here is the content of your shopping cart. The tables below contain: Quantity products and services. With the "plus" or "minus" button, you can increase or decrease the quantity of a specific product. And below it. the product table, as a one-time subscription.</p>
 </br>
+
+<center><button class="button_minus" " onclick="decrease(&ID_PROD.)">-</button></center>
+<a href="javascript:decrease(&ID_PROD.)">Decrease product</a>
+
+<center><button class="button_plus" " onclick="increase(&ID_PROD.)">+</button></center>
+<a href="javascript:increase(&ID_PROD.)">Increase product</a>
+
+<button class="fa fa-trash fa-lg" onclick="delete_product(&ID_PROD.)"></button>
+</br><a href="javascript:delete_product(&ID_PROD.)">Delete product</a>
 
 <table class="styled-table">
     <thead>
@@ -10,12 +19,11 @@
     <tbody>
         <tr>
             <td align="center">The total amount of your monthly subscription will be:</td>
-            <td align="center"><b>€ &P14_SUM_SUBS.</b></td>
+            <td align="center"><b>&P14_SUM_SUBS.</b></td>
         </tr>
     </tbody>
 </table>
 </br>
-<p>The table below lists the one-time subscriptions that you can pay for. These subscriptions give you access to specific APEX applications, or to video training. You can cancel your selected subscription by using the "trash" button.</p>
-</br>
 
 <p>Value of your shopping cart: <b>&P14_SUM_CART.</b> EUR.</p>
+<p>Dear customer. To complete the purchase process, for selected products, log in. And if you do not have an account with us yet. Then register.</p>
