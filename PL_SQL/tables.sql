@@ -175,3 +175,8 @@ FROM product_type t
 INNER JOIN products p ON t.id = p.product_type
 INNER JOIN shopping_cart s ON s.id_product = p.id
 WHERE (s.session_number = apex_custom_auth.get_session_id) AND ((t.id = 'a') OR (t.id = 'e'));
+
+CREATE VIEW trans_history (id_user, direct, id_trans, date_operation, amount, description) AS
+SELECT o.id_user, CASE t.direction WHEN 'i' THEN 'green' WHEN 'o' THEN 'red' END, o.id_trans, to_char(o.date_operation, 'dd/mon/yyyy ss:mi:hh24'), o.amount, o.description
+FROM account_operations o
+INNER JOIN transaction_type t ON o.id_type = t.id_type;

@@ -7,6 +7,7 @@ function add_product(id_prod) {
         {
             success: function (Data) {
                 apex.message.alert('Product added to shopping cart.');
+                setTimeout(() => {apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":4:" + apex.env.APP_SESSION);}, 5000);
             },
             dataType: "text"
         },
@@ -85,7 +86,10 @@ function place_order(){
         {
             success: function (Data) {
                 if (Data.is_logged){
+                    apex.navigation.dialog.close(true);
                     apex.message.alert('Your order has been placed. Go to your user panel.');
+                    setTimeout(() => {apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);}, 2000);
+                    
                 }else{
                     apex.message.alert('To place an order, please log in or register first.');
                 };                

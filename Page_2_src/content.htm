@@ -1,6 +1,45 @@
-﻿<h1>User panel</h1>
-<p>You are logged in as: <b>&NAME_USER.</b>.</p>
-<p>Your individual link (permalink) to promote our service: <b>http://apex.oracle.com/[...]/premium/link/id/&ID_USER.</b></p>
+﻿<p>Dear <b>&NAME_USER.</b>. Below you will find the basic data, to fund your account with money in euros.</p>
+<p>Your individual link (permalink) to promote our service:</p>
 <p>Copy this link, and post it on social media.</p>
-<p>Your current account balance in euro: <b>&EUR.</b>.</p>
-<p>The status of Your current order. And also Your correspondence to our sales representative, you can download as report in PDF file. Click the button on the right.</p>
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>http://apex.oracle.com/pls/apex/premium/link/id/&ID_USER.</th>
+            <td align="left"><button type="button" class="t-Button t-Button--hot" onclick="copy_link('&ID_USER.')">Copy link.</button></td>
+        </tr>
+    </thead>
+</table>
+<p>Each visit to the above URL address, by a new user, will credit your account with the amount of <b>1 euro and 50 eurocents net</b>.</p>
+<p>This is an individual bank account number in the IBAN standard, bank name, and SWIFT code. Any amount in euro transferred to this account will be available to you in the User Panel. You can spend it on products purchased on our exchange. Just copy the bank account number and SWIFT code to make a transfer. You do not need to add a transfer title.</p>
+<table class="styled-table">
+    <thead>
+        <tr>
+            <td colspan="2" align="center">Bank name:</td>
+        </tr>
+        <tr>
+            <th colspan="2" align="center">Alior Bank</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="2" align="center">SWIFT code:</td>
+        </tr>
+        <tr>
+            <th align="center">ALBPPLPW</th>
+            <td align="center"><button type="button" class="t-Button t-Button--hot" onclick="copy_swift()">Copy SWIFT code.</button></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">Individual bank number IBAN:</td>
+        </tr>
+        <tr>
+            <th align="center">PL76249000050000401105540768</th>
+            <td align="center"><button type="button" class="t-Button t-Button--hot" onclick="copy_iban()">Copy IBAN.</button></td>
+        </tr>
+    </tbody>
+</table>
+<p>You can also pay for selected products in your shopping cart via PayPal – with MasterCard or Visa.</p>
+
+<div id="paypal-container-FYHLUJJNF9RJE"></div>
+
+<p>These are your purchased products and subscriptions:</p>
+</br>

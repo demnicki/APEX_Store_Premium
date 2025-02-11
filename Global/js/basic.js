@@ -103,6 +103,7 @@ function logo_shop() {
     };
     document.getElementById('logo_shop').innerHTML = text_input_logo;
 };
+
 function send_message() {
     apex.server.process(
         'Send_mess',
@@ -118,19 +119,11 @@ function send_message() {
             dataType: "json"
         },
         {
-            error: function () { }
+            error: function () {}
         }
     );
 };
 
-function get_page(p_url) {
-    document.getElementById('load_page').innerHTML = '<h1>Please wait...</h1>';
-    fetch(p_url).then(function (response) {
-        return response.text();
-    }).then(function (html) {
-        document.getElementById('load_page').innerHTML = html;
-    });
-};
 function get_page(p_url) {
     document.getElementById('load_page').innerHTML = '<h1>Please wait...</h1>'; 
 fetch(p_url).then(function (response) {
