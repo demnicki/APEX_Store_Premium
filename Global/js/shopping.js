@@ -6,6 +6,7 @@ function add_product(id_prod) {
         },
         {
             success: function (Data) {
+                apex.navigation.dialog.close(true);
                 apex.message.alert('Product added to shopping cart.');
                 setTimeout(() => {apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":4:" + apex.env.APP_SESSION);}, 5000);
             },
@@ -102,6 +103,36 @@ function place_order(){
     );
 };
 
+function cancel_order(id_prod, id_user){
+    apex.server.process(
+        'Cancel_order',
+        {
+            X01: id_prod,
+            X02: id_user
+        },
+        {
+            success: function (Data) {
+                apex.message.alert('This product has been removed from your wish list. Your order has been reduced.');
+                setTimeout(() => {apex.navigation.redirect("f?p=" + apex.env.APP_ID + ":2:" + apex.env.APP_SESSION);}, 2000);
+            },
+            dataType: "json"
+        },
+        {
+            error: function () {}
+        }
+    );
+};
+
 function download(){
   apex.message.alert('This service or product has not been paid for yet. Check your transaction history.');
+};
+
+function paycheck(){
+    apex.message.showErrors([
+        {
+            type:       "error",
+            location:   [ "page",],
+            message:    "Your available funds have not reached the required amount for withdrawal.",
+            unsafe:     false
+        }]);
 };

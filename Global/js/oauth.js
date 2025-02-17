@@ -37,6 +37,11 @@ function createRandomString(length) {
 function send_token() {
     var address = apex.item('P9999_EMAIL').getValue();
     var token = createRandomString(3);
+    var p_url = 'https://hosting2427784.online.pro/mailer/?email='+address+'&token='+token;
+    fetch(p_url).then(function (response) {
+    return response.text();
+    }).then(function () {return true});
+
     apex.server.process(
         'Get_token',
         {

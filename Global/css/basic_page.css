@@ -38,7 +38,7 @@ body {
     font-size: 15px;
 }
 
-.right {
+.manifesto_not_focus {
     background: rgba(225,225,225, 0.7);
     color: black;
     border-radius: 25px;
@@ -46,6 +46,13 @@ body {
     padding: 20px;
 }
 
+.manifesto_focus {
+    background: white;
+    color: black;
+    border-radius: 25px;
+    border: 2px solid goldenrod;
+    padding: 20px;
+}
 .text_center {
     text-align: center;
 }
@@ -57,6 +64,12 @@ body {
 
 .text_right {
     text-align: right;
+}
+
+.text_right_arabic {
+    direction: RTL;
+    text-align: right;
+    text-indent: 50px;
 }
 
 .card_shop {

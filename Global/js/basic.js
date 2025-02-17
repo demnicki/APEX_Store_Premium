@@ -1,36 +1,3 @@
-var array_colors = [
-    'white',
-    'darkgoldenrod',
-    'red',
-    'grey',
-    'yellow',
-    'blue',
-    'green',
-    'azure',
-    'goldenrod',
-    'maroon',
-    'orchid',
-    'olive'];
-var array_logo = [
-    'A',
-    'P',
-    'E',
-    'X',
-    ' ',
-    'S',
-    't',
-    'o',
-    'r',
-    'e',
-    ' ',
-    'P',
-    'r',
-    'e',
-    'm',
-    'i',
-    'u',
-    'm'];
-
 function go_to_panel(nr_if_login) {
     var v_nr_if_login = parseInt(nr_if_login);
     if (v_nr_if_login == 1) {
@@ -94,17 +61,17 @@ function copy_iban(){
     apex.message.alert('IBAN bank account number copied.');
 };
 
-function logo_shop() {
-    var random_n = 0;
-    var text_input_logo = '';
-    for (let i = 0; i < array_logo.length; i++) {
-        random_n = Math.round(Math.random() * 12);
-        text_input_logo = text_input_logo + '<font color="' + array_colors[random_n] + '">' + array_logo[i] + '</font>';
-    };
-    document.getElementById('logo_shop').innerHTML = text_input_logo;
-};
-
 function send_message() {
+    if (apex.item('P2_LIST').getValue().length < 2) {
+        apex.message.showErrors([
+        {
+            type:       "error",
+            location:   [ "page",],
+            message:    "Warning: Select your sales representative from the list.",
+            unsafe:     false
+        }]);
+        return false;
+    };
     apex.server.process(
         'Send_mess',
         {
@@ -124,10 +91,21 @@ function send_message() {
     );
 };
 
+function text_background(swift){
+    if (swift == 0) {
+        document.getElementById('load_page').className = "manifesto_focus";
+        console.log('0');
+        }
+    else if (swift == 1) {
+        document.getElementById('load_page').className = "manifesto_not_focus";
+        console.log('1');
+    };
+};
+
 function get_page(p_url) {
     document.getElementById('load_page').innerHTML = '<h1>Please wait...</h1>'; 
-fetch(p_url).then(function (response) {
-    return response.text();
+    fetch(p_url).then(function (response) {
+        return response.text();
     }).then(function (html) {
         document.getElementById('load_page').innerHTML = html;
     });
