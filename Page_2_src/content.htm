@@ -10,7 +10,7 @@
     </thead>
 </table>
 <p>Each visit to the above URL address, by a new user, will credit your account with the amount of <b>1 euro and 50 eurocents net</b>.</p>
-<p>This is an individual bank account number in the IBAN standard, bank name, and SWIFT code. Any amount in euro transferred to this account will be available to you in the User Panel. You can spend it on products purchased on our exchange. Just copy the bank account number and SWIFT code to make a transfer. You do not need to add a transfer title.</p>
+<p>This is an individual bank account number in the IBAN standard, bank name, and SWIFT code. Any amount in euro transferred to this account will be available to you in the User Panel. You can spend it on products purchased on our exchange. Just copy the bank account number and SWIFT code to make a transfer. You do not need to add a transfer title. In the beneficiary's (recipient's) name field of the transfer, enter your own name and surname - the one you used to register this account.</p>
 <table class="styled-table">
     <thead>
         <tr>
@@ -32,14 +32,73 @@
             <td colspan="2" align="center">Individual bank number IBAN:</td>
         </tr>
         <tr>
-            <th align="center">PL76249000050000401105540768</th>
+            <th align="center">PL7624900005000040110554XXXX</th>
             <td align="center"><button type="button" class="t-Button t-Button--hot" onclick="copy_iban()">Copy IBAN.</button></td>
         </tr>
     </tbody>
 </table>
 <p>You can also pay for selected products in your shopping cart via PayPal – with MasterCard or Visa.</p>
 
+<!-- -->
+
 <div id="paypal-container-FYHLUJJNF9RJE"></div>
 
-<p>These are your purchased products and subscriptions:</p>
+<!-- -->
+
+<p>Below is your detailed history of financial transactions in your account. Click on the transaction title to see the full description.</p>
 </br>
+<p>Your account balance in Euro is currently <b>&P2_SUM_ASSETS.</b>.</p>
+</br>
+
+<!-- -->
+
+<p>Here are the products and subscriptions you have purchased. As well as your current order for more products that has not yet been paid for:</p>
+</br>
+<p>For the current order and services, you must pay: <b>&P2_SUM_LIABILITIES.</b></p>
+</br>
+
+<!-- -->
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th colspan="2" align="center">Mirror</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="center">Your operating system is:</td>
+            <th align="center">&P2_OP_SYS.</th>
+        </tr>
+        <tr>
+            <td align="center">Your browser is:</td>
+            <th align="center">&P2_BROWSER.</th>
+        </tr>
+        <tr>
+            <td align="center">Your IP address::</td>
+            <th align="center">&P2_IP.</th>
+        </tr>
+    </tbody>
+</table>
+</br>
+
+<!-- -->
+
+<p>Summary of your finances (total assets and liabilities):</p>
+</br>
+<table class="styled-table">
+    <thead>
+        <tr>
+            <td align="center">Balance - Your assets:</td>
+            <td align="center">Balance - Your liabilities:</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th align="center"><h1><font color="green">&P2_SUM_ASSETS.</font></h1></th>
+            <th align="center"><h1><font color="red">&P2_SUM_LIABILITIES.</font></h1></th>
+        </tr>
+    </tbody>
+</table>
+</br>
+<p>You can request a withdrawal of your available funds in multiples of € 500. That's € 500, x <font color="red">&P2_MULTIPLIER.</font> = <font color="green">€ &P2_PAYCHECK.</font></p>

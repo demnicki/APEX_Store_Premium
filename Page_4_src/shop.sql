@@ -1,0 +1,1 @@
+﻿SELECT id, image, name_product, '€ '||to_char(price, '999.99') AS price FROM products ORDER BY id;
