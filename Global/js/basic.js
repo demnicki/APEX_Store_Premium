@@ -1,3 +1,21 @@
+function yt(nr_page){
+    apex.server.process(
+        'Youtube',
+        {
+            X01: nr_page
+        },
+        {
+            success: function (Data) {
+                apex.navigation.redirect(Data.link_pg);
+            },
+            dataType: "json"
+        },
+        {
+            error: function () {}
+        }
+    );
+};
+
 function go_to_panel(nr_if_login) {
     var v_nr_if_login = parseInt(nr_if_login);
     if (v_nr_if_login == 1) {

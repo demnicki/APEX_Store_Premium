@@ -1,19 +1,19 @@
 ﻿/*
 List of all application PL/SQL processes by execution sequence.
 
-Sequence one. Every time the page loads.
+Sequence one. Launching on loading any application subpage.
 */
 DECLARE
 	n NUMBER(1);
 BEGIN
-	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;    
+	SELECT count(session_number) INTO n FROM api_sessions WHERE session_number = apex_custom_auth.get_session_id;
     :LINK_PG_18 := apex_page.get_url(p_page => 18);
 	:TEXT_SHOP_CART := 'Value of your shopping cart: '||shop.cart_value(apex_custom_auth.get_session_id)||' EUR.';
 	IF n = 0 THEN
 		INSERT INTO api_sessions(session_number, ip, agent) VALUES (apex_custom_auth.get_session_id, owa_util.get_cgi_env('REMOTE_ADDR'), owa_util.get_cgi_env('HTTP_USER_AGENT'));
 		COMMIT;
     	:NR_IF_LOGIN := 0;
-		:NR_INBOX := 1;
+		:NR_INBOX := 2;
 		:TEXT_IF_LOGIN := 'You are not logged in. Log in / register now.';
     	:TEXT_INBOX := 'Unread messages in your inbox: '||:NR_INBOX;
 	ELSIF n = 1 THEN
@@ -188,7 +188,23 @@ BEGIN
 	apex_json.close_object;
 END;
 /*
-Sequence ten. The process of sending an individual message by the user to the designated sales representative.
+Sequence ten. Sequence ten. Cancellation of the entire order, or of an individual product from the order.
+*/
+BEGIN
+    DELETE FROM customer_subscriptions WHERE id_product = apex_application.g_x01 AND id_user = apex_application.g_x02;
+    COMMIT;
+    apex_json.open_object;
+	apex_json.write('if_successful', true);
+	apex_json.close_object;
+EXCEPTION
+	WHEN others THEN
+		ROLLBACK;
+		apex_json.open_object;
+		apex_json.write('if_successful', false);
+		apex_json.close_object;
+END;
+/*
+Sequence eleven. The process of sending an individual message by the user to the designated sales representative.
 */
 BEGIN
 	INSERT INTO messages(id_user, id_emp, message_status, content_message, content_translation_pl)
@@ -206,10 +222,10 @@ EXCEPTION
 		apex_json.close_object;
 END;
 /*
-Sequence eleven. The process of topping up the user's account by one and a half euros for clicking on an individual permalink.
+Sequence twelve. The process of topping up the user's account by one and a half euros for clicking on an individual permalink.
 */
 BEGIN
-    INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (apex_application.g_x01, 2, 1.50, 'The guest with IP address '||owa_util.get_cgi_env('REMOTE_ADDR')||' has credited your account with the amount of one and a half euros.');
+    INSERT INTO account_operations(id_user, id_type, amount, description) VALUES (apex_application.g_x01, 2, 1.50, 'The guest with IP address '||owa_util.get_cgi_env('REMOTE_ADDR')||', operating system '||mirror.op_sys(owa_util.get_cgi_env('HTTP_USER_AGENT'))||' and web browser '||mirror.browser(owa_util.get_cgi_env('HTTP_USER_AGENT'))||' has topped up your account with the amount of one and a half euros.');
     COMMIT;
     apex_json.open_object;
 	apex_json.write('if_successful', true);
@@ -220,4 +236,12 @@ EXCEPTION
 		apex_json.open_object;
 		apex_json.write('if_successful', false);
 		apex_json.close_object;
+END;
+/*
+Sequence thirteen. Generating a link to modal subpages with videos on the YouTube channel.
+*/
+BEGIN
+    apex_json.open_object;
+	apex_json.write('link_pg', apex_page.get_url(p_page => apex_application.g_x01));
+	apex_json.close_object;
 END;
