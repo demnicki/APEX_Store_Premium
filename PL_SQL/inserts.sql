@@ -39,3 +39,14 @@ INSERT INTO message_status(id, description) VALUES ('4', 'New message, not read 
 INSERT INTO message_status(id, description) VALUES ('3', 'Message read but not yet translated.');
 INSERT INTO message_status(id, description) VALUES ('2', 'Message read and translated, but not yet delivered to the client.');
 INSERT INTO message_status(id, description) VALUES ('1', 'This message is fully supported.');
+
+/*
+INSERT to table „Message_status”, in the loop.
+*/
+BEGIN
+	FOR i IN 1..5 LOOP
+		INSERT INTO account_operations(id_user, id_type, amount, description) VALUES ([?], 4, 100, 'Bank transfer, domestic. Account top-up.');
+	END LOOP;
+	INSERT INTO account_operations(id_user, id_type, amount, description) VALUES ([?], 5, [?], 'Payment for products from the current order.');
+	COMMIT;
+END;
