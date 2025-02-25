@@ -21,7 +21,7 @@ BEGIN
 END;
 /*
 */
-SELECT direct, id_trans, date_operation, amount, description FROM trans_history WHERE id_user = :ID_USER;
+SELECT direct, id_trans, date_operation, amount, description FROM trans_history WHERE id_user = :ID_USER FETCH FIRST 10 ROWS ONLY;
 /*
 */
 SELECT id_product, (SELECT name_product FROM products WHERE id = id_product) AS name_product, '' AS availability, '' AS cancel_product FROM customer_subscriptions WHERE id_user = :ID_USER;

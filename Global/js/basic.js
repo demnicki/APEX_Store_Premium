@@ -25,6 +25,10 @@ function go_to_panel(nr_if_login) {
     };
 };
 
+function json_user(id_user) {
+    window.open('http://apex.oracle.com/pls/apex/premium/link/biling/' + id_user, '_blank');
+};
+
 function social_med(nr) {
     if (nr == 1) {
         window.open('http://www.facebook.com/groups/1744045656082133', '_blank');
