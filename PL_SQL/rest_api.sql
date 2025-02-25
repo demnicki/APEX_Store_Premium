@@ -47,8 +47,9 @@ BEGIN
     FOR i IN ao(:id_user) LOOP
         json_ao := json_object_t();
         json_ao.put('id_trans', i.id_trans);
-        json_ao.put('amount', i.amount);
         json_ao.put('date_operation', i.date_operation);
+        json_ao.put('amount', i.amount);        
+        json_ao.put('description', i.description);
         arr_ao.append(json_ao);
     END LOOP;
     obj_json.put('language_user', v_language);
