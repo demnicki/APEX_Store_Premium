@@ -163,20 +163,20 @@ CREATE TABLE messages(
 Creating views.
 */
 CREATE VIEW quant_products (id_prod, name_product, quantity, cost, minus_product, add_product) AS
-SELECT p.id, p.name_product, s.quantity, '€ '||(s.quantity * p.price), '', ''
+SELECT p.id, p.name_product, s.quantity, '€ '||to_char((s.quantity * p.price), '999.99'), '', ''
 FROM product_type t
 INNER JOIN products p ON t.id = p.product_type
 INNER JOIN shopping_cart s ON s.id_product = p.id
 WHERE (s.session_number = apex_custom_auth.get_session_id) AND ((t.id = 'c') OR (t.id = 's'));
 
 CREATE VIEW subs_products (id_prod, name_product, cost, delete_product) AS
-SELECT p.id, p.name_product, '€ '||(s.quantity * p.price), ''
+SELECT p.id, p.name_product, '€ '||to_char(p.price, '999.99'), ''
 FROM product_type t
 INNER JOIN products p ON t.id = p.product_type
 INNER JOIN shopping_cart s ON s.id_product = p.id
 WHERE (s.session_number = apex_custom_auth.get_session_id) AND ((t.id = 'a') OR (t.id = 'e'));
 
 CREATE VIEW trans_history (id_user, direct, id_trans, date_operation, amount, description) AS
-SELECT o.id_user, CASE t.direction WHEN 'i' THEN 'green' WHEN 'o' THEN 'red' END, o.id_trans, to_char(o.date_operation, 'dd/mon/yyyy ss:mi:hh24'), o.amount, o.description
+SELECT o.id_user, CASE t.direction WHEN 'i' THEN 'green' WHEN 'o' THEN 'red' END, o.id_trans, to_char(o.date_operation, 'dd/mon/yyyy ss:mi:hh24'), '€ '||to_char(o.amount, '999.99'), o.description
 FROM account_operations o
 INNER JOIN transaction_type t ON o.id_type = t.id_type;
