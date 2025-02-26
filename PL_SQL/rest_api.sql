@@ -76,5 +76,38 @@ BEGIN
     htp.p(obj_json.stringify);
 END;
 /*
-Controller returning account history and order details of a specific user - according to "id_user".
+Controller, internal for handling incoming messages from Clients. - according to "id_user".
 */
+DECLARE
+    CURSOR up IS SELECT gender_user, language_user, first_name, second_name, surname FROM user_profiles;
+    CURSOR ms IS SELECT id_user, date_created, content_message FROM messages;
+    obj_json JSON_OBJECT_T;
+    json_up JSON_OBJECT_T;
+    json_ms JSON_OBJECT_T;
+    arr_up JSON_ARRAY_T;
+    arr_ms JSON_ARRAY_T;
+BEGIN
+    obj_json := json_object_t();
+    arr_up := json_array_t();
+    arr_ms := json_array_t();
+    FOR i IN up LOOP
+        json_up := json_object_t();
+        json_up.put('gender_user', i.gender_user);
+        json_up.put('language_user', i.language_user);
+        json_up.put('first_name', i.first_name);
+        json_up.put('second_name', i.second_name);        
+        json_up.put('surname', i.surname);
+        arr_up.append(json_up);
+    END LOOP;
+    FOR i IN ms LOOP
+        json_ms := json_object_t();
+        json_ms.put('id_user', i.id_user);
+        json_ms.put('date_created', i.date_created);
+        json_ms.put('content_message', i.content_message);
+        arr_ms.append(json_ms);
+    END LOOP;
+    obj_json.put('arr_up', arr_up);
+    obj_json.put('arr_ms', arr_ms);
+    owa_util.mime_header('application/json', true, 'UTF-8');
+    htp.p(obj_json.stringify);
+END;
