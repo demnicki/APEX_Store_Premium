@@ -76,7 +76,7 @@ BEGIN
     htp.p(obj_json.stringify);
 END;
 /*
-Controller, internal for handling incoming messages from Clients. - according to "id_user".
+Controller, internal for handling incoming messages from Clients.
 */
 DECLARE
     CURSOR up IS SELECT gender_user, language_user, first_name, second_name, surname FROM user_profiles;
@@ -86,10 +86,16 @@ DECLARE
     json_ms JSON_OBJECT_T;
     arr_up JSON_ARRAY_T;
     arr_ms JSON_ARRAY_T;
+    sum_profiles_user NUMBER(6);
+    sum_subscriptions NUMBER(9);
+    sum_ac_operations NUMBER(9);
 BEGIN
     obj_json := json_object_t();
     arr_up := json_array_t();
     arr_ms := json_array_t();
+    SELECT count(id_user) INTO sum_profiles_user FROM user_profiles;
+    SELECT count(id_user) INTO sum_subscriptions FROM customer_subscriptions;
+    SELECT sum(amount) INTO sum_ac_operations FROM account_operations;
     FOR i IN up LOOP
         json_up := json_object_t();
         json_up.put('gender_user', i.gender_user);
@@ -106,6 +112,9 @@ BEGIN
         json_ms.put('content_message', i.content_message);
         arr_ms.append(json_ms);
     END LOOP;
+    obj_json.put('sum_profiles_user', sum_profiles_user);
+    obj_json.put('sum_subscriptions', sum_subscriptions);
+    obj_json.put('sum_ac_operations', sum_ac_operations);
     obj_json.put('arr_up', arr_up);
     obj_json.put('arr_ms', arr_ms);
     owa_util.mime_header('application/json', true, 'UTF-8');
