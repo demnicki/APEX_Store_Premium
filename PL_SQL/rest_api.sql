@@ -121,6 +121,7 @@ BEGIN
     obj_json.put('sum_profiles_user', sum_profiles_user);
     obj_json.put('sum_subscriptions', sum_subscriptions);
     obj_json.put('sum_ac_operations', sum_ac_operations);
+    obj_json.put('sum_cart_shopping', sum_cart_shopping);
     obj_json.put('arr_up', arr_up);
     obj_json.put('arr_ms', arr_ms);
     owa_util.mime_header('application/json', true, 'UTF-8');
