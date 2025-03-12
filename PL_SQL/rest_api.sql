@@ -90,12 +90,14 @@ DECLARE
     sum_subscriptions       NUMBER(9);
     sum_ac_operations       NUMBER(9);
     sum_cart_shopping       NUMBER(9);
+    total_page_hits         NUMBER(9);
     sum_indiv_ac_operations NUMBER(9);
     
 BEGIN
     obj_json := json_object_t();
     arr_up := json_array_t();
     arr_ms := json_array_t();
+    SELECT count(session_number) INTO total_page_hits FROM api_sessions;
     SELECT count(id_user) INTO sum_profiles_user FROM user_profiles;
     SELECT count(id_user) INTO sum_subscriptions FROM customer_subscriptions;
     SELECT sum(amount) INTO sum_ac_operations FROM account_operations;
@@ -118,6 +120,7 @@ BEGIN
         json_ms.put('content_message', i.content_message);
         arr_ms.append(json_ms);
     END LOOP;
+    obj_json.put('total_page_hits', total_page_hits);
     obj_json.put('sum_profiles_user', sum_profiles_user);
     obj_json.put('sum_subscriptions', sum_subscriptions);
     obj_json.put('sum_ac_operations', sum_ac_operations);
