@@ -79,16 +79,19 @@ END;
 Controller, internal for handling incoming messages from Clients.
 */
 DECLARE
-    CURSOR up IS SELECT gender_user, language_user, first_name, second_name, surname FROM user_profiles;
+    CURSOR up IS SELECT id_user, gender_user, language_user, first_name, second_name, surname FROM user_profiles;
     CURSOR ms IS SELECT id_user, date_created, content_message FROM messages;
-    obj_json JSON_OBJECT_T;
-    json_up JSON_OBJECT_T;
-    json_ms JSON_OBJECT_T;
-    arr_up JSON_ARRAY_T;
-    arr_ms JSON_ARRAY_T;
-    sum_profiles_user NUMBER(6);
-    sum_subscriptions NUMBER(9);
-    sum_ac_operations NUMBER(9);
+    obj_json                JSON_OBJECT_T;
+    json_up                 JSON_OBJECT_T;
+    json_ms                 JSON_OBJECT_T;
+    arr_up                  JSON_ARRAY_T;
+    arr_ms                  JSON_ARRAY_T;
+    sum_profiles_user       NUMBER(6);
+    sum_subscriptions       NUMBER(9);
+    sum_ac_operations       NUMBER(9);
+    sum_cart_shopping       NUMBER(9);
+    sum_indiv_ac_operations NUMBER(9);
+    
 BEGIN
     obj_json := json_object_t();
     arr_up := json_array_t();
@@ -96,8 +99,11 @@ BEGIN
     SELECT count(id_user) INTO sum_profiles_user FROM user_profiles;
     SELECT count(id_user) INTO sum_subscriptions FROM customer_subscriptions;
     SELECT sum(amount) INTO sum_ac_operations FROM account_operations;
+    SELECT count(session_number) INTO sum_cart_shopping FROM shopping_cart;
     FOR i IN up LOOP
+        SELECT sum(amount) INTO sum_indiv_ac_operations FROM account_operations WHERE id_user = i.id_user;
         json_up := json_object_t();
+        json_up.put('sum_indiv_ac_operations', sum_indiv_ac_operations);
         json_up.put('gender_user', i.gender_user);
         json_up.put('language_user', i.language_user);
         json_up.put('first_name', i.first_name);
